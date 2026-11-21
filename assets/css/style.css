@@ -63,7 +63,7 @@ h3 { font-size: 1.6rem; }
 .btn--secundario { border-color: var(--verde); color: var(--verde); }
 .btn--secundario:hover { background: var(--verde); color: #fff; }
 .btn--bloco { width: 100%; }
-.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; pointer-events: none; }
 
 /* ---------- Topo ---------- */
 .topo {

@@ -9,6 +9,7 @@
   const formatar = (v) => moeda.format(v);
   const escapar = (s) =>
     String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const linkWhats = (texto) => `https://wa.me/${WHATSAPP_LOJA}?text=${encodeURIComponent(texto)}`;
   const normalizar = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
   // Gerador pseudoaleatório com semente, para que cada produto tenha sempre a mesma ilustração
@@ -333,7 +334,15 @@
     $("#qtdSacola").textContent = totalQtd;
     $("#sacolaTotal").textContent = formatar(total);
     $("#sacolaVazia").hidden = itens.length > 0;
-    $("#finalizar").disabled = itens.length === 0;
+    const fin = $("#finalizar");
+    if (itens.length) {
+      const linhas = itens.map(({ produto: p, qtd }) => `• ${qtd}x ${p.nome} — ${formatar(p.preco * qtd)}`);
+      fin.href = linkWhats(`Olá, Bella Flor! Gostaria de fazer um pedido:\n\n${linhas.join("\n")}\n\nTotal: ${formatar(total)}`);
+      fin.removeAttribute("aria-disabled");
+    } else {
+      fin.removeAttribute("href");
+      fin.setAttribute("aria-disabled", "true");
+    }
     $("#sacolaItens").innerHTML = itens
       .map(
         ({ produto: p, qtd }) => `
@@ -380,17 +389,6 @@
   fundo.addEventListener("click", fecharSacola);
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && painel.classList.contains("aberta")) fecharSacola();
-  });
-
-  const linkWhats = (texto) => `https://wa.me/${WHATSAPP_LOJA}?text=${encodeURIComponent(texto)}`;
-
-  $("#finalizar").addEventListener("click", () => {
-    const itens = itensSacola();
-    if (!itens.length) return;
-    const linhas = itens.map(({ produto: p, qtd }) => `• ${qtd}x ${p.nome} — ${formatar(p.preco * qtd)}`);
-    const total = itens.reduce((s, i) => s + i.qtd * i.produto.preco, 0);
-    const msg = `Olá, Bella Flor! Gostaria de fazer um pedido:\n\n${linhas.join("\n")}\n\nTotal: ${formatar(total)}`;
-    window.open(linkWhats(msg), "_blank", "noopener");
   });
 
   $("#linkWhatsContato").href = linkWhats("Olá, Bella Flor! Gostaria de encomendar um arranjo personalizado.");
