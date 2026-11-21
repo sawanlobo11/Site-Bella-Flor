@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bella Flor — Floricultura</title>
+  <meta name="description" content="Bella Flor: buquês, arranjos, plantas e cestas de presente feitos com carinho. Veja nosso catálogo e peça pelo WhatsApp." />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header class="topo" id="topo">
+    <div class="container topo__inner">
+      <a href="#inicio" class="logo" aria-label="Bella Flor — início">
+        <svg class="logo__icone" viewBox="0 0 40 40" aria-hidden="true">
+          <g transform="translate(20 18)">
+            <ellipse rx="6" ry="10" transform="rotate(0) translate(0 -7)" />
+            <ellipse rx="6" ry="10" transform="rotate(72) translate(0 -7)" />
+            <ellipse rx="6" ry="10" transform="rotate(144) translate(0 -7)" />
+            <ellipse rx="6" ry="10" transform="rotate(216) translate(0 -7)" />
+            <ellipse rx="6" ry="10" transform="rotate(288) translate(0 -7)" />
+            <circle r="4.5" class="logo__miolo" />
+          </g>
+        </svg>
+        <span>Bella <em>Flor</em></span>
+      </a>
+
+      <nav class="menu" id="menu" aria-label="Navegação principal">
+        <a href="#inicio">Início</a>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
+      </nav>
+
+      <div class="topo__acoes">
+        <button class="btn-sacola" id="abrirSacola" aria-label="Abrir sacola">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z" /><path d="M9 7V6a3 3 0 0 1 6 0v1" /></svg>
+          <span class="btn-sacola__qtd" id="qtdSacola">0</span>
+        </button>
+        <button class="btn-menu" id="btnMenu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+      <div class="container hero__inner">
+        <div class="hero__texto">
+          <p class="selo">Floricultura artesanal</p>
+          <h1>Flores que dizem o que o coração sente</h1>
+          <p class="hero__sub">Buquês, arranjos e plantas montados à mão com flores frescas selecionadas todos os dias. Entrega no mesmo dia para pedidos até as 15h.</p>
+          <div class="hero__botoes">
+            <a href="#catalogo" class="btn btn--primario">Ver catálogo</a>
+            <a href="#contato" class="btn btn--secundario">Fale conosco</a>
+          </div>
+          <ul class="hero__beneficios">
+            <li><strong>Entrega</strong> no mesmo dia</li>
+            <li><strong>Flores</strong> frescas diariamente</li>
+            <li><strong>Cartão</strong> personalizado grátis</li>
+          </ul>
+        </div>
+        <div class="hero__arte" aria-hidden="true" id="heroArte"></div>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section class="catalogo" id="catalogo">
+      <div class="container">
+        <div class="secao__cabecalho">
+          <p class="selo">Nosso catálogo</p>
+          <h2>Escolha a flor perfeita</h2>
+          <p>Navegue pelas categorias, adicione à sacola e finalize seu pedido pelo WhatsApp.</p>
+        </div>
+
+        <div class="filtros">
+          <div class="filtros__categorias" id="filtrosCategorias" role="tablist" aria-label="Categorias"></div>
+          <div class="filtros__controles">
+            <label class="campo-busca">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
+              <input type="search" id="busca" placeholder="Buscar flores..." aria-label="Buscar produtos" />
+            </label>
+            <select id="ordenar" aria-label="Ordenar produtos">
+              <option value="padrao">Relevância</option>
+              <option value="menor">Menor preço</option>
+              <option value="maior">Maior preço</option>
+              <option value="nome">Nome (A–Z)</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="catalogo__contagem" id="contagem" aria-live="polite"></p>
+        <div class="grade-produtos" id="gradeProdutos"></div>
+        <p class="catalogo__vazio" id="vazio" hidden>Nenhum produto encontrado. Tente outra busca.</p>
+      </div>
+    </section>
+
+    <!-- SOBRE -->
+    <section class="sobre" id="sobre">
+      <div class="container sobre__inner">
+        <div class="sobre__texto">
+          <p class="selo">Sobre nós</p>
+          <h2>Cultivando momentos desde 2010</h2>
+          <p>A Bella Flor nasceu do amor por flores e pelas histórias que elas ajudam a contar. Cada buquê é pensado com cuidado, das flores escolhidas ao laço final.</p>
+          <p>Trabalhamos com produtores locais e flores importadas selecionadas, garantindo frescor e durabilidade em cada arranjo.</p>
+        </div>
+        <div class="sobre__numeros">
+          <div><strong>15+</strong><span>anos de história</span></div>
+          <div><strong>20 mil</strong><span>buquês entregues</span></div>
+          <div><strong>4,9★</strong><span>avaliação dos clientes</span></div>
+          <div><strong>100%</strong><span>feito à mão</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section class="contato" id="contato">
+      <div class="container contato__inner">
+        <div>
+          <p class="selo">Contato</p>
+          <h2>Venha nos visitar</h2>
+          <ul class="contato__lista">
+            <li><span>Endereço</span>Rua das Flores, 123 — Centro</li>
+            <li><span>Horário</span>Seg a Sáb, 8h às 19h · Dom, 8h às 12h</li>
+            <li><span>Telefone</span>(11) 99999-9999</li>
+            <li><span>E-mail</span>contato@bellaflor.com.br</li>
+          </ul>
+        </div>
+        <div class="contato__cta">
+          <h3>Pedido especial?</h3>
+          <p>Montamos arranjos personalizados para aniversários, casamentos, eventos corporativos e homenagens.</p>
+          <a class="btn btn--primario" id="linkWhatsContato" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container rodape__inner">
+      <p><strong>Bella Flor</strong> · Floricultura</p>
+      <p>© <span id="ano"></span> Bella Flor. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- SACOLA -->
+  <div class="sacola-fundo" id="sacolaFundo" hidden></div>
+  <aside class="sacola" id="sacola" aria-label="Sacola de compras" aria-hidden="true">
+    <div class="sacola__topo">
+      <h2>Sua sacola</h2>
+      <button class="btn-fechar" id="fecharSacola" aria-label="Fechar sacola">×</button>
+    </div>
+    <ul class="sacola__itens" id="sacolaItens"></ul>
+    <p class="sacola__vazia" id="sacolaVazia">Sua sacola está vazia.</p>
+    <div class="sacola__rodape">
+      <div class="sacola__total"><span>Total</span><strong id="sacolaTotal">R$ 0,00</strong></div>
+      <button class="btn btn--primario btn--bloco" id="finalizar">Finalizar pelo WhatsApp</button>
+    </div>
+  </aside>
+
+  <!-- MODAL PRODUTO -->
+  <dialog class="modal" id="modal">
+    <button class="btn-fechar" id="fecharModal" aria-label="Fechar">×</button>
+    <div class="modal__conteudo" id="modalConteudo"></div>
+  </dialog>
+
+  <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/produtos.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
