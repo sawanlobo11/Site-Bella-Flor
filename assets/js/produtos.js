@@ -141,4 +141,4 @@ const PRODUTOS = [
 ];
 
 /* Número do WhatsApp da loja (somente dígitos, com DDI e DDD) */
-const WHATSAPP_LOJA = "5511999999999";
+const WHATSAPP_LOJA = "5573999745122";
