@@ -3,34 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bella Flor — Floricultura</title>
-  <meta name="description" content="Bella Flor: buquês, arranjos, plantas e cestas de presente feitos com carinho. Veja nosso catálogo e peça pelo WhatsApp." />
-  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <title>Floricultura Bela</title>
+  <meta name="description" content="Floricultura Bela — floricultura e paisagismo em Teixeira de Freitas (BA). Buquês, buquês de noiva, arranjos, plantas, cestas de presente e adubos. Peça pelo WhatsApp (73) 99974-5122." />
+  <meta name="theme-color" content="#0b2a10" />
+  <link rel="icon" href="assets/img/favicon.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playball&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
   <header class="topo" id="topo">
     <div class="container topo__inner">
-      <a href="#inicio" class="logo" aria-label="Bella Flor — início">
-        <svg class="logo__icone" viewBox="0 0 40 40" aria-hidden="true">
-          <g transform="translate(20 18)">
-            <ellipse rx="6" ry="10" transform="rotate(0) translate(0 -7)" />
-            <ellipse rx="6" ry="10" transform="rotate(72) translate(0 -7)" />
-            <ellipse rx="6" ry="10" transform="rotate(144) translate(0 -7)" />
-            <ellipse rx="6" ry="10" transform="rotate(216) translate(0 -7)" />
-            <ellipse rx="6" ry="10" transform="rotate(288) translate(0 -7)" />
-            <circle r="4.5" class="logo__miolo" />
-          </g>
-        </svg>
-        <span>Bella <em>Flor</em></span>
+      <a href="#inicio" class="marca" aria-label="Floricultura Bela — início">
+        <img src="assets/img/logo-bela.png" alt="" width="52" height="52" class="marca__logo" />
+        <span class="marca__texto">
+          <span class="marca__nome">Bela</span>
+          <span class="marca__sub">Floricultura e Paisagismo</span>
+        </span>
       </a>
 
       <nav class="menu" id="menu" aria-label="Navegação principal">
-        <a href="#inicio">Início</a>
         <a href="#catalogo">Catálogo</a>
+        <a href="#paisagismo">Paisagismo</a>
         <a href="#sobre">Sobre</a>
         <a href="#contato">Contato</a>
       </nav>
@@ -52,20 +47,26 @@
     <section class="hero" id="inicio">
       <div class="container hero__inner">
         <div class="hero__texto">
-          <p class="selo">Floricultura artesanal</p>
-          <h1>Flores que dizem o que o coração sente</h1>
-          <p class="hero__sub">Buquês, arranjos e plantas montados à mão com flores frescas selecionadas todos os dias. Entrega no mesmo dia para pedidos até as 15h.</p>
+          <p class="selo selo--ouro">Teixeira de Freitas · BA</p>
+          <h1>Transformando sentimentos em <em>flores</em> e flores em memórias inesquecíveis.</h1>
+          <p class="hero__sub">Buquês, arranjos, buquês de noiva, plantas e cestas de presente montados com carinho. Faça seu pedido pelo WhatsApp e receba com todo o cuidado.</p>
           <div class="hero__botoes">
-            <a href="#catalogo" class="btn btn--primario">Ver catálogo</a>
-            <a href="#contato" class="btn btn--secundario">Fale conosco</a>
+            <a href="#catalogo" class="btn btn--ouro">Ver catálogo</a>
+            <a class="btn btn--contorno" data-whats="Olá, Floricultura Bela! Gostaria de fazer um pedido." target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-whats"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.2-.5-.3Z"/></svg>
+              (73) 99974-5122
+            </a>
           </div>
-          <ul class="hero__beneficios">
-            <li><strong>Entrega</strong> no mesmo dia</li>
-            <li><strong>Flores</strong> frescas diariamente</li>
-            <li><strong>Cartão</strong> personalizado grátis</li>
-          </ul>
         </div>
-        <div class="hero__arte" aria-hidden="true" id="heroArte"></div>
+        <div class="hero__arte">
+          <div class="hero__foto">
+            <img src="assets/img/produtos/buque-campestre.jpg" alt="Buquê campestre com rosas e flores do campo" />
+          </div>
+          <div class="hero__foto hero__foto--mini">
+            <img src="assets/img/produtos/orquidea.jpg" alt="Orquídea pink" />
+          </div>
+          <span class="hero__assinatura" aria-hidden="true">com amor, Bela</span>
+        </div>
       </div>
     </section>
 
@@ -75,15 +76,17 @@
         <div class="secao__cabecalho">
           <p class="selo">Nosso catálogo</p>
           <h2>Escolha a flor perfeita</h2>
-          <p>Navegue pelas categorias, adicione à sacola e finalize seu pedido pelo WhatsApp.</p>
+          <p>Toque em uma categoria, adicione à sacola e finalize o pedido pelo WhatsApp.</p>
         </div>
 
+        <div class="destaques" id="destaques" role="tablist" aria-label="Categorias"></div>
+
         <div class="filtros">
-          <div class="filtros__categorias" id="filtrosCategorias" role="tablist" aria-label="Categorias"></div>
+          <p class="catalogo__contagem" id="contagem" aria-live="polite"></p>
           <div class="filtros__controles">
             <label class="campo-busca">
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-              <input type="search" id="busca" placeholder="Buscar flores..." aria-label="Buscar produtos" />
+              <input type="search" id="busca" placeholder="Buscar flores, plantas..." aria-label="Buscar produtos" />
             </label>
             <select id="ordenar" aria-label="Ordenar produtos">
               <option value="padrao">Relevância</option>
@@ -94,26 +97,49 @@
           </div>
         </div>
 
-        <p class="catalogo__contagem" id="contagem" aria-live="polite"></p>
         <div class="grade-produtos" id="gradeProdutos"></div>
-        <p class="catalogo__vazio" id="vazio" hidden>Nenhum produto encontrado. Tente outra busca.</p>
+        <p class="catalogo__vazio" id="vazio" hidden>Nenhum produto encontrado. Tente outra busca ou fale com a gente no WhatsApp.</p>
+      </div>
+    </section>
+
+    <!-- PAISAGISMO -->
+    <section class="paisagismo" id="paisagismo">
+      <div class="container paisagismo__inner">
+        <div class="paisagismo__fotos">
+          <img src="assets/img/produtos/paisagismo-gramado.jpg" alt="Jardim com gramado bem cuidado" loading="lazy" />
+          <img src="assets/img/produtos/paisagismo-interiores.jpg" alt="Plantas em vasos decorando um ambiente interno" loading="lazy" />
+        </div>
+        <div class="paisagismo__texto">
+          <p class="selo selo--ouro">Paisagismo</p>
+          <h2>Seu jardim do jeito que você sonhou</h2>
+          <p>Além das flores, a Bela cuida do verde da sua casa ou empresa. Fazemos projetos de jardim, plantio, montagem de vasos e orientação de manutenção.</p>
+          <ul class="lista-check">
+            <li>Projeto e execução de jardins</li>
+            <li>Plantas para áreas internas e externas</li>
+            <li>Adubos, substratos e defensivos</li>
+            <li>Visita para orçamento</li>
+          </ul>
+          <a class="btn btn--ouro" data-whats="Olá, Floricultura Bela! Gostaria de um orçamento de paisagismo." target="_blank" rel="noopener">Pedir orçamento</a>
+        </div>
       </div>
     </section>
 
     <!-- SOBRE -->
     <section class="sobre" id="sobre">
       <div class="container sobre__inner">
+        <img src="assets/img/logo-bela.png" alt="Logo da Floricultura Bela" class="sobre__logo" width="240" height="240" loading="lazy" />
         <div class="sobre__texto">
-          <p class="selo">Sobre nós</p>
-          <h2>Cultivando momentos desde 2010</h2>
-          <p>A Bella Flor nasceu do amor por flores e pelas histórias que elas ajudam a contar. Cada buquê é pensado com cuidado, das flores escolhidas ao laço final.</p>
-          <p>Trabalhamos com produtores locais e flores importadas selecionadas, garantindo frescor e durabilidade em cada arranjo.</p>
-        </div>
-        <div class="sobre__numeros">
-          <div><strong>15+</strong><span>anos de história</span></div>
-          <div><strong>20 mil</strong><span>buquês entregues</span></div>
-          <div><strong>4,9★</strong><span>avaliação dos clientes</span></div>
-          <div><strong>100%</strong><span>feito à mão</span></div>
+          <p class="selo">Sobre a Bela</p>
+          <h2>Flores, buquês e acessórios com o carinho de Teixeira de Freitas</h2>
+          <p>A Floricultura Bela nasceu para ajudar você a dizer o que sente. Cada buquê é montado à mão, das flores escolhidas ao laço final, para transformar um momento em lembrança.</p>
+          <div class="sobre__numeros">
+            <div><strong>3.600+</strong><span>seguidores no Instagram</span></div>
+            <div><strong>1.000+</strong><span>trabalhos publicados</span></div>
+          </div>
+          <a class="link-insta" data-insta target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" /></svg>
+            @floriculturabelatx
+          </a>
         </div>
       </div>
     </section>
@@ -122,19 +148,19 @@
     <section class="contato" id="contato">
       <div class="container contato__inner">
         <div>
-          <p class="selo">Contato</p>
+          <p class="selo selo--ouro">Contato</p>
           <h2>Venha nos visitar</h2>
           <ul class="contato__lista">
-            <li><span>Endereço</span>Rua das Flores, 123 — Centro</li>
-            <li><span>Horário</span>Seg a Sáb, 8h às 19h · Dom, 8h às 12h</li>
-            <li><span>Telefone</span>(73) 99974-5122</li>
-            <li><span>E-mail</span>contato@bellaflor.com.br</li>
+            <li><span>Endereço</span>Rua Águas Claras, 375 — Bela Vista<br />Teixeira de Freitas — BA</li>
+            <li><span>WhatsApp</span>(73) 99974-5122</li>
+            <li><span>Instagram</span>@floriculturabelatx</li>
           </ul>
+          <a class="link-mapa" href="https://www.google.com/maps/search/?api=1&query=Rua+%C3%81guas+Claras%2C+375%2C+Bela+Vista%2C+Teixeira+de+Freitas+-+BA" target="_blank" rel="noopener">Ver no mapa →</a>
         </div>
         <div class="contato__cta">
           <h3>Pedido especial?</h3>
-          <p>Montamos arranjos personalizados para aniversários, casamentos, eventos corporativos e homenagens.</p>
-          <a class="btn btn--primario" id="linkWhatsContato" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          <p>Montamos arranjos personalizados para aniversários, casamentos, eventos e homenagens. Conte sua ideia que a gente cuida do resto.</p>
+          <a class="btn btn--ouro" data-whats="Olá, Floricultura Bela! Gostaria de encomendar um arranjo personalizado." target="_blank" rel="noopener">Chamar no WhatsApp</a>
         </div>
       </div>
     </section>
@@ -142,10 +168,14 @@
 
   <footer class="rodape">
     <div class="container rodape__inner">
-      <p><strong>Bella Flor</strong> · Floricultura</p>
-      <p>© <span id="ano"></span> Bella Flor. Todos os direitos reservados.</p>
+      <p><span class="rodape__nome">Bela</span> Floricultura e Paisagismo</p>
+      <p>© <span id="ano"></span> Floricultura Bela · Teixeira de Freitas — BA</p>
     </div>
   </footer>
+
+  <a class="whats-flutuante" data-whats="Olá, Floricultura Bela!" target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.2-.5-.3Z"/></svg>
+  </a>
 
   <!-- SACOLA -->
   <div class="sacola-fundo" id="sacolaFundo" hidden></div>
@@ -158,7 +188,8 @@
     <p class="sacola__vazia" id="sacolaVazia">Sua sacola está vazia.</p>
     <div class="sacola__rodape">
       <div class="sacola__total"><span>Total</span><strong id="sacolaTotal">R$ 0,00</strong></div>
-      <a class="btn btn--primario btn--bloco" id="finalizar" target="_blank" rel="noopener">Finalizar pelo WhatsApp</a>
+      <p class="sacola__nota" id="sacolaNota" hidden>Itens sob consulta têm o valor combinado pelo WhatsApp.</p>
+      <a class="btn btn--rosa btn--bloco" id="finalizar" target="_blank" rel="noopener">Finalizar pelo WhatsApp</a>
     </div>
   </aside>
 
