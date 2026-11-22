@@ -43,11 +43,14 @@
       .join("");
     caixa.addEventListener("click", (e) => {
       const btn = e.target.closest(".destaque");
-      if (!btn) return;
-      estado.categoria = btn.dataset.cat;
-      $$(".destaque", caixa).forEach((c) => c.setAttribute("aria-selected", c === btn));
-      renderizar();
+      if (btn) selecionarCategoria(btn.dataset.cat);
     });
+  }
+
+  function selecionarCategoria(chave) {
+    estado.categoria = chave;
+    $$(".destaque").forEach((c) => c.setAttribute("aria-selected", c.dataset.cat === chave));
+    renderizar();
   }
 
   function filtrar() {
@@ -288,6 +291,64 @@
       btnMenu.setAttribute("aria-expanded", "false");
     }
   });
+
+  /* =========================================================
+   * Banners (carrossel)
+   * ========================================================= */
+  (() => {
+    const slides = $$(".banner");
+    const pontos = $$("#bannerPontos button");
+    if (!slides.length) return;
+    const reduzir = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let atual = 0;
+    let timer;
+
+    function mostrar(i) {
+      atual = (i + slides.length) % slides.length;
+      slides.forEach((s, n) => {
+        s.classList.toggle("ativo", n === atual);
+        s.setAttribute("aria-hidden", n !== atual);
+        const link = $("a", s);
+        if (link) link.tabIndex = n === atual ? 0 : -1;
+      });
+      pontos.forEach((p, n) => p.setAttribute("aria-current", n === atual));
+    }
+    function iniciar() {
+      clearInterval(timer);
+      if (!reduzir) timer = setInterval(() => mostrar(atual + 1), 5000);
+    }
+    const ir = (i) => {
+      mostrar(i);
+      iniciar();
+    };
+
+    $("#bannerAnt").addEventListener("click", () => ir(atual - 1));
+    $("#bannerProx").addEventListener("click", () => ir(atual + 1));
+    pontos.forEach((p, n) => p.addEventListener("click", () => ir(n)));
+
+    // Deslizar com o dedo no celular
+    const area = $("#bannersTrilho");
+    let xInicio = null;
+    area.addEventListener("touchstart", (e) => (xInicio = e.touches[0].clientX), { passive: true });
+    area.addEventListener("touchend", (e) => {
+      if (xInicio === null) return;
+      const dx = e.changedTouches[0].clientX - xInicio;
+      if (Math.abs(dx) > 40) ir(atual + (dx < 0 ? 1 : -1));
+      xInicio = null;
+    });
+
+    // Pausa com o mouse sobre o banner ou com a aba escondida
+    const secao = $(".banners");
+    secao.addEventListener("mouseenter", () => clearInterval(timer));
+    secao.addEventListener("mouseleave", iniciar);
+    document.addEventListener("visibilitychange", () => (document.hidden ? clearInterval(timer) : iniciar()));
+
+    // Botões que levam a uma categoria do catálogo
+    $$("[data-ir-cat]").forEach((a) => a.addEventListener("click", () => selecionarCategoria(a.dataset.irCat)));
+
+    mostrar(0);
+    iniciar();
+  })();
 
   /* =========================================================
    * Início

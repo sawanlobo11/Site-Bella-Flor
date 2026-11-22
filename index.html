@@ -43,30 +43,40 @@
   </header>
 
   <main>
-    <!-- HERO -->
-    <section class="hero" id="inicio">
-      <div class="container hero__inner">
-        <div class="hero__texto">
-          <p class="selo selo--ouro">Teixeira de Freitas · BA</p>
-          <h1>Transformando sentimentos em <em>flores</em> e flores em memórias inesquecíveis.</h1>
-          <p class="hero__sub">Buquês, arranjos, buquês de noiva, plantas e cestas de presente montados com carinho. Faça seu pedido pelo WhatsApp e receba com todo o cuidado.</p>
-          <div class="hero__botoes">
-            <a href="#catalogo" class="btn btn--ouro">Ver catálogo</a>
-            <a class="btn btn--contorno" data-whats="Olá, Floricultura Bela! Gostaria de fazer um pedido." target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-whats"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.2-.3-.2-.5-.3Z"/></svg>
-              (73) 99974-5122
-            </a>
+    <!-- BANNERS -->
+    <section class="banners" id="inicio" aria-roledescription="carrossel" aria-label="Destaques da Bela">
+      <div class="banners__trilho" id="bannersTrilho">
+        <div class="banner ativo" role="group" aria-roledescription="slide" aria-label="1 de 3">
+          <img src="assets/img/banners/banner-buques.jpg" alt="Buquê com rosas, astilbes e folhagens" />
+          <div class="banner__conteudo container">
+            <p class="banner__selo">Buquês</p>
+            <h2 class="banner__titulo">Feitos à mão, <em>com amor</em></h2>
+            <a href="#catalogo" class="btn btn--ouro" data-ir-cat="buques">Ver buquês</a>
           </div>
         </div>
-        <div class="hero__arte">
-          <div class="hero__foto">
-            <img src="assets/img/produtos/buque-campestre.jpg" alt="Buquê campestre com rosas e flores do campo" />
+        <div class="banner" role="group" aria-roledescription="slide" aria-label="2 de 3">
+          <img src="assets/img/banners/banner-noiva.jpg" alt="Noiva segurando buquê de rosas salmão e brancas" loading="lazy" />
+          <div class="banner__conteudo container">
+            <p class="banner__selo">Buquê de Noiva</p>
+            <h2 class="banner__titulo">Para o seu <em>grande dia</em></h2>
+            <a href="#catalogo" class="btn btn--ouro" data-ir-cat="noiva">Encomendar</a>
           </div>
-          <div class="hero__foto hero__foto--mini">
-            <img src="assets/img/produtos/orquidea.jpg" alt="Orquídea pink" />
-          </div>
-          <span class="hero__assinatura" aria-hidden="true">com amor, Bela</span>
         </div>
+        <div class="banner" role="group" aria-roledescription="slide" aria-label="3 de 3">
+          <img src="assets/img/banners/banner-paisagismo.jpg" alt="Plantas em vasos decorando um ambiente" loading="lazy" />
+          <div class="banner__conteudo container">
+            <p class="banner__selo">Plantas e Paisagismo</p>
+            <h2 class="banner__titulo">Mais verde na sua <em>casa</em></h2>
+            <a href="#paisagismo" class="btn btn--ouro">Conhecer</a>
+          </div>
+        </div>
+      </div>
+      <button class="banners__seta banners__seta--ant" id="bannerAnt" aria-label="Banner anterior">‹</button>
+      <button class="banners__seta banners__seta--prox" id="bannerProx" aria-label="Próximo banner">›</button>
+      <div class="banners__pontos" id="bannerPontos">
+        <button aria-label="Ir para o banner 1" aria-current="true"></button>
+        <button aria-label="Ir para o banner 2"></button>
+        <button aria-label="Ir para o banner 3"></button>
       </div>
     </section>
 

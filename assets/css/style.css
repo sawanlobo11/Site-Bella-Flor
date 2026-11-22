@@ -114,32 +114,44 @@ h3 { font-size: 1.5rem; }
 .btn-menu[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .btn-menu[aria-expanded="true"] span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
-/* ---------- Hero ---------- */
-.hero {
-  position: relative; overflow: hidden; color: var(--texto-claro);
-  background:
-    radial-gradient(circle at 80% 30%, rgba(216, 27, 106, .18) 0, transparent 40%),
-    radial-gradient(circle at 10% 100%, rgba(110, 168, 58, .18) 0, transparent 45%),
-    var(--noite);
+/* ---------- Banners ---------- */
+.banners { position: relative; background: var(--noite); overflow: hidden; border-bottom: 3px solid var(--ouro); }
+.banners__trilho { position: relative; height: clamp(420px, 62vh, 600px); }
+.banner {
+  position: absolute; inset: 0; opacity: 0; visibility: hidden;
+  transition: opacity .8s ease, visibility 0s .8s;
 }
-.hero__inner { display: grid; grid-template-columns: 1.15fr 1fr; gap: 3rem; align-items: center; padding-block: 4.5rem 5.5rem; }
-.hero h1 { color: #fff; }
-.hero h1 em { font-family: var(--script); font-style: normal; font-weight: 400; color: var(--orquidea); font-size: 1.15em; }
-.hero__sub { font-size: 1.05rem; max-width: 540px; color: var(--texto-claro); }
-.hero__botoes { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
-
-.hero__arte { position: relative; width: 100%; max-width: 460px; justify-self: center; aspect-ratio: 1; }
-.hero__foto {
-  position: absolute; inset: 0; border-radius: 50%; padding: 8px;
-  background: var(--ouro-gradiente); box-shadow: 0 30px 60px -25px rgba(0, 0, 0, .7);
+.banner.ativo { opacity: 1; visibility: visible; transition-delay: 0s; }
+.banner img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); transition: transform 6s ease-out; }
+.banner.ativo img { transform: scale(1); }
+.banner::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(11, 42, 16, .88) 0%, rgba(11, 42, 16, .55) 40%, rgba(11, 42, 16, 0) 75%);
 }
-.hero__foto img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 4px solid var(--noite); }
-.hero__foto--mini { inset: auto auto -2% -6%; width: 38%; height: 38%; padding: 5px; }
-.hero__foto--mini img { border-width: 3px; }
-.hero__assinatura {
-  position: absolute; right: -2%; bottom: 4%; font-family: var(--script); font-size: 1.9rem; color: var(--ouro-claro);
-  transform: rotate(-8deg); text-shadow: 0 2px 10px rgba(0, 0, 0, .5);
+.banner__conteudo {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: .4rem;
 }
+.banner__selo {
+  margin: 0; font-size: .78rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ouro-claro);
+}
+.banner__titulo { color: #fff; font-size: clamp(2.2rem, 5.5vw, 4rem); max-width: 12ch; margin: 0 0 1.2rem; }
+.banner__titulo em { display: block; font-family: var(--script); font-style: normal; font-weight: 400; color: #ff6aa8; font-size: 1.1em; text-shadow: 0 2px 12px rgba(0, 0, 0, .45); }
+.banners__seta {
+  position: absolute; bottom: 4px; z-index: 3;
+  width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid rgba(246, 213, 74, .7);
+  background: rgba(11, 42, 16, .55); color: var(--ouro-claro); font-size: 1.8rem; line-height: 1;
+  display: grid; place-items: center; padding-bottom: 3px; font-size: 1.5rem; transition: background .2s;
+}
+.banners__seta:hover { background: var(--noite); }
+.banners__seta--ant { left: calc(50% - 96px); }
+.banners__seta--prox { left: calc(50% + 58px); }
+.banners__pontos { position: absolute; left: 0; right: 0; bottom: 18px; z-index: 2; display: flex; justify-content: center; gap: .55rem; }
+.banners__pontos button {
+  width: 10px; height: 10px; padding: 0; border-radius: 999px; border: 1.5px solid var(--ouro-claro);
+  background: transparent; transition: width .3s, background .3s;
+}
+.banners__pontos button[aria-current="true"] { width: 28px; background: var(--ouro-gradiente); }
 
 /* ---------- Catálogo ---------- */
 .catalogo { padding-block: 5.5rem; background: var(--creme); }
@@ -315,9 +327,7 @@ h3 { font-size: 1.5rem; }
 
 /* ---------- Responsivo ---------- */
 @media (max-width: 900px) {
-  .hero__inner, .paisagismo__inner, .contato__inner { grid-template-columns: 1fr; }
-  .hero__inner { padding-block: 2.5rem 4rem; gap: 2.5rem; }
-  .hero__arte { max-width: 320px; order: -1; }
+  .paisagismo__inner, .contato__inner { grid-template-columns: 1fr; }
   .sobre__inner { grid-template-columns: 1fr; gap: 2rem; justify-items: center; text-align: center; }
   .sobre__logo { width: 180px; height: 180px; }
   .sobre__numeros { justify-content: center; }
@@ -327,6 +337,10 @@ h3 { font-size: 1.5rem; }
 }
 @media (max-width: 760px) {
   .btn-menu { display: flex; }
+  .banners__trilho { height: auto; aspect-ratio: 4 / 5; max-height: 78vh; width: 100%; }
+  .banner::after { background: linear-gradient(0deg, rgba(11, 42, 16, .92) 0%, rgba(11, 42, 16, .5) 45%, rgba(11, 42, 16, 0) 75%); }
+  .banner__conteudo { justify-content: flex-end; padding-bottom: 3.4rem; }
+  .banners__seta { display: none; }
   .marca__sub { display: none; }
   .menu {
     position: absolute; top: 76px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--noite);
