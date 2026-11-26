@@ -1,0 +1,796 @@
+<title>Estoque Bela</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playball&family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: faixa verde da marca no topo, painel de resumo, abas Físicos/Orgânicos,
+   lista de itens à esquerda e histórico de movimentações à direita (empilha no celular).
+   Visual único da marca Bela (não muda com o tema escuro). */
+:root {
+  --noite: #0b2a10;
+  --noite-2: #143a1a;
+  --ouro: #e9a816;
+  --ouro-claro: #f6d54a;
+  --orquidea: #d81b6a;
+  --folha: #4f8a2a;
+  --papel: #f7f5ee;
+  --cartao: #fffdf8;
+  --linha: #e3dfd0;
+  --texto: #1d261e;
+  --suave: #626b61;
+  --claro: #dce6d8;
+  --ok: #2f7d3a;      --ok-fundo: #e3f2e1;
+  --baixo: #a86200;   --baixo-fundo: #fdf0d5;
+  --zerado: #b3261e;  --zerado-fundo: #fbe4e2;
+  --script: "Playball", "Brush Script MT", cursive;
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --ease-sai: cubic-bezier(.2, .8, .2, 1);
+  --ease-suave: cubic-bezier(.4, 0, .2, 1);
+  --medidor-trilho: #ebe6d6;
+  --ouro-grad: linear-gradient(135deg, #f8e06a 0%, #e9a816 50%, #c47d06 100%);
+  color-scheme: light;
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { overflow-x: hidden; overflow-x: clip; }
+body { overflow-x: hidden; overflow-x: clip; margin: 0; background: var(--papel); color: var(--texto); font-family: var(--sans); font-size: 14px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--noite); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--orquidea); outline-offset: 2px; }
+/* Camada de ambiente: brilho de orquídea e folha derivando bem devagar atrás de tudo */
+body::after {
+  content: ""; position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(38% 32% at 18% 24%, rgba(216, 27, 106, .07), transparent 70%),
+    radial-gradient(42% 36% at 82% 70%, rgba(79, 138, 42, .09), transparent 70%),
+    radial-gradient(30% 26% at 70% 12%, rgba(233, 168, 22, .07), transparent 70%);
+  animation: deriva 90s var(--ease-suave) infinite alternate; animation-delay: -20s;
+}
+@keyframes deriva { to { transform: translate3d(6%, -5%, 0) rotate(4deg); } }
+body.pausado *, body.pausado *::before, body.pausado *::after, body.pausado::after { animation-play-state: paused !important; }
+.pular { position: absolute; left: 16px; top: -60px; z-index: 30; background: var(--noite); color: #fff; padding: 10px 14px; border-radius: 10px; transition: top .2s var(--ease-sai); }
+.pular:focus { top: 10px; }
+main:focus { outline: none; }
+.wrap { max-width: 1280px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Topo */
+.topo { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--noite); border-bottom: 2px solid var(--ouro); color: #fff; }
+.topo .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
+.topo img { width: 44px; height: 44px; border-radius: 50%; }
+.marca { display: flex; flex-direction: column; line-height: 1; }
+.marca b { font-family: var(--script); font-weight: 400; font-size: 26px; }
+.marca span { font-family: var(--mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--ouro-claro); font-weight: 700; margin-top: 3px; }
+.sinc { margin-left: auto; font-size: 12px; color: var(--claro); display: flex; align-items: center; gap: 6px; text-align: right; }
+.sinc i { width: 8px; height: 8px; border-radius: 50%; background: var(--ouro); flex-shrink: 0; }
+.sinc.ok i { background: #5fd06a; }
+.sinc.erro i { background: #ff6b5e; }
+
+/* Resumo */
+.resumo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding-block: 20px 8px; }
+.tile { background: var(--cartao); border: 1px solid var(--linha); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.tile small { display: block; font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--suave); }
+.tile strong { display: block; font-family: var(--serif); font-size: 28px; line-height: 1.2; margin-top: 4px; }
+.tile em { font-style: normal; font-size: 12px; color: var(--suave); }
+.tile.alerta strong { color: var(--zerado); }
+.tile.aviso strong { color: var(--baixo); }
+
+/* Seções */
+.secoes { display: flex; gap: 8px; padding-block: 14px 4px; flex-wrap: wrap; }
+.secao-btn { flex: 1 1 200px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px; border-radius: 12px; border: 2px solid var(--linha); background: var(--cartao); text-align: left; }
+.secao-btn b { font-family: var(--serif); font-size: 20px; }
+.secao-btn span { font-size: 12px; color: var(--suave); }
+.secao-btn .cont { min-width: 32px; height: 32px; padding: 0 8px; border-radius: 16px; display: grid; place-items: center; background: var(--papel); font-weight: 700; font-size: 13px; color: var(--texto); }
+.secao-btn, .chip, .btn, .ic, .toggle, .item-link, .busca { transition: background-color .25s var(--ease-suave), border-color .25s var(--ease-suave), color .25s var(--ease-suave), transform .2s var(--ease-sai), opacity .2s var(--ease-suave); }
+.btn:active, .ic:active, .chip:active, .secao-btn:active { transform: scale(.97); }
+.secao-btn[aria-selected="true"] { border-color: var(--noite); background: var(--noite); color: #fff; }
+.secao-btn[aria-selected="true"] span { color: var(--claro); }
+.secao-btn[aria-selected="true"] .cont { background: var(--ouro-grad); color: var(--noite); }
+
+/* Corpo */
+.corpo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 330px); gap: 20px; padding-block: 12px 40px; align-items: start; }
+.painel { background: var(--cartao); border: 1px solid var(--linha); border-radius: 14px; min-width: 0; }
+.painel-topo { padding: 14px 16px; border-bottom: 1px solid var(--linha); display: flex; flex-direction: column; gap: 12px; }
+.linha-ctrl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--linha); background: var(--papel); font-size: 13px; font-weight: 600; color: var(--noite); }
+.chip[aria-pressed="true"] { background: var(--noite); border-color: var(--noite); color: #fff; }
+.chip.add { border-style: dashed; color: var(--suave); background: transparent; }
+.busca { flex: 1 1 200px; display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; border: 1px solid var(--linha); border-radius: 10px; background: var(--papel); min-width: 0; }
+.busca input { border: 0; background: none; outline: 0; width: 100%; min-width: 0; }
+.busca svg { width: 16px; height: 16px; stroke: var(--suave); fill: none; stroke-width: 2; flex-shrink: 0; }
+.toggle { display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; border: 1px solid var(--linha); border-radius: 10px; background: var(--papel); font-weight: 600; font-size: 13px; white-space: nowrap; }
+.toggle input { accent-color: var(--orquidea); width: 16px; height: 16px; margin: 0; }
+.btn { height: 40px; padding: 0 16px; border-radius: 10px; border: 0; font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.btn-ouro { background: var(--ouro-grad); color: var(--noite); }
+.btn-rosa { background: var(--orquidea); color: #fff; }
+.btn-linha { background: var(--cartao); border: 1px solid var(--linha); color: var(--texto); }
+.btn-perigo { background: var(--zerado); color: #fff; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Tabela */
+.tabela-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--suave); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--linha); white-space: nowrap; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--linha); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+td.dir, th.dir { text-align: right; }
+.item-nome { font-weight: 700; }
+.item-link { border: 0; background: none; padding: 0; text-align: left; font-weight: 700; color: var(--texto); }
+.item-link:hover { color: var(--orquidea); text-decoration: underline; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.item-sub { font-size: 12px; color: var(--suave); }
+.pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.pill.ok { background: var(--ok-fundo); color: var(--ok); }
+.pill.baixo { background: var(--baixo-fundo); color: var(--baixo); }
+.pill.zerado { background: var(--zerado-fundo); color: var(--zerado); }
+.pill.vence { background: #f6e3ef; color: #8f1550; }
+tbody.chegando tr { animation: linha .5s var(--ease-sai) both; }
+tbody.chegando tr:nth-child(2) { animation-delay: 60ms; } tbody.chegando tr:nth-child(3) { animation-delay: 120ms; }
+tbody.chegando tr:nth-child(4) { animation-delay: 180ms; } tbody.chegando tr:nth-child(5) { animation-delay: 240ms; }
+tbody.chegando tr:nth-child(n+6) { animation-delay: 300ms; }
+@keyframes linha { from { opacity: 0; transform: translateY(8px); } }
+tr.st-zerado td:first-child { box-shadow: inset 4px 0 0 var(--zerado); }
+tr.st-baixo td:first-child { box-shadow: inset 4px 0 0 var(--baixo); }
+.qtd { font-size: 18px; font-weight: 700; white-space: nowrap; }
+.qtd small { font-size: 12px; font-weight: 500; color: var(--suave); }
+.medidor { position: relative; display: block; width: 112px; height: 6px; margin: 6px 0 2px auto; border-radius: 3px; background: var(--medidor-trilho); }
+.medidor b { position: absolute; inset: 0 auto 0 0; width: 100%; border-radius: 3px; transform-origin: left center; background: var(--folha); transition: transform .7s var(--ease-sai); }
+.medidor.baixo b { background: var(--baixo); }
+.medidor.zerado { background: var(--zerado-fundo); }
+.medidor i { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; border-radius: 1px; background: var(--noite); }
+.medidor-leg { display: block; font-family: var(--mono); font-size: 10px; color: var(--suave); text-align: right; white-space: nowrap; }
+.nada { color: var(--suave); font-size: 12px; }
+.acoes { display: flex; gap: 4px; justify-content: flex-end; }
+.ic { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--linha); background: var(--cartao); display: grid; place-items: center; font-weight: 700; font-size: 16px; color: var(--noite); padding: 0; }
+.ic:hover { background: var(--papel); }
+.ic.mais { color: var(--ok); }
+.ic.menos { color: var(--zerado); }
+.ic svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+.vazio { padding: 40px 20px; text-align: center; color: var(--suave); }
+.vazio b { display: block; font-family: var(--serif); font-size: 20px; color: var(--texto); margin-bottom: 4px; }
+
+/* Histórico */
+.hist h2 { font-family: var(--serif); font-size: 18px; margin: 0; }
+.hist ul { list-style: none; margin: 0; padding: 4px 0; max-height: 640px; overflow-y: auto; }
+.hist li { padding: 10px 16px; border-bottom: 1px solid var(--linha); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; }
+.hist li:last-child { border-bottom: 0; }
+.mv { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; }
+.mv.entrada { background: var(--ok-fundo); color: var(--ok); }
+.mv.saida { background: #e6edf5; color: #2a5a8a; }
+.mv.perda { background: var(--zerado-fundo); color: var(--zerado); }
+.mv.ajuste { background: var(--baixo-fundo); color: var(--baixo); }
+.hist .t { font-weight: 600; overflow-wrap: anywhere; }
+.hist .m { font-size: 12px; color: var(--suave); overflow-wrap: anywhere; }
+.hist .q { font-weight: 700; white-space: nowrap; }
+
+/* Diálogos */
+dialog { border: 0; border-radius: 16px; padding: 0; width: min(520px, calc(100% - 32px)); background: var(--cartao); color: var(--texto); box-shadow: 0 24px 60px -20px rgba(0,0,0,.5); }
+dialog::backdrop { background: rgba(5, 20, 8, .55); }
+dialog[open] { animation: abre .32s var(--ease-sai); }
+dialog[open]::backdrop { animation: escurece .32s var(--ease-suave); }
+@keyframes abre { from { opacity: 0; transform: translateY(14px) scale(.98); } }
+@keyframes escurece { from { opacity: 0; } }
+.dlg-topo { background: var(--noite); color: #fff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.dlg-topo h3 { margin: 0; font-family: var(--serif); font-size: 20px; }
+.dlg-topo button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: transparent; color: #fff; font-size: 20px; line-height: 1; padding: 0; }
+form.dlg { padding: 18px 20px 20px; display: grid; gap: 12px; }
+.campos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.campo { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.campo.cheio { grid-column: 1 / -1; }
+.campo label { font-size: 12px; font-weight: 700; color: var(--suave); }
+.campo input, .campo select, .campo textarea { height: 40px; border: 1px solid var(--linha); border-radius: 10px; padding: 0 12px; background: var(--papel); width: 100%; min-width: 0; }
+.campo textarea { height: 64px; padding: 8px 12px; resize: vertical; }
+.campo input:focus, .campo select:focus, .campo textarea:focus { outline: 2px solid var(--ouro); border-color: transparent; }
+.campo .dica { font-size: 11px; color: var(--suave); }
+.tipos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.tipos label { border: 1px solid var(--linha); border-radius: 10px; padding: 8px 4px; text-align: center; font-weight: 700; font-size: 12px; cursor: pointer; background: var(--papel); }
+.tipos input { position: absolute; opacity: 0; pointer-events: none; }
+.tipos input:checked + span { color: #fff; }
+.tipos label:has(input:checked) { background: var(--noite); border-color: var(--noite); color: #fff; }
+.tipos label:has(input:focus-visible) { outline: 3px solid var(--ouro); }
+.dlg-rodape { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; position: sticky; bottom: 0; z-index: 1; background: var(--cartao); margin: 4px -20px -20px; padding: 12px 20px calc(16px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--linha); }
+dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
+.dlg-rodape .esq { margin-right: auto; }
+.prev { font-size: 13px; background: var(--papel); border-radius: 10px; padding: 10px 12px; }
+.erro-msg { color: var(--zerado); font-size: 13px; font-weight: 600; }
+.cat-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.cat-lista li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 6px 6px 12px; background: var(--papel); border-radius: 10px; }
+
+/* Aviso */
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 160%); background: var(--noite); color: #fff; border: 1px solid var(--ouro); padding: 10px 18px; border-radius: 999px; font-weight: 600; z-index: 20; transition: transform .4s var(--ease-sai); max-width: calc(100% - 32px); text-align: center; }
+.toast.on { transform: translate(-50%, 0); }
+.leitura { background: var(--baixo-fundo); color: var(--baixo); border-radius: 10px; padding: 10px 14px; font-weight: 600; margin-top: 12px; }
+
+@media (max-width: 1000px) {
+  .corpo { grid-template-columns: minmax(0, 1fr); }
+  .resumo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  /* No celular cada item vira um cartão: nome e quantidade em cima, situação e botões embaixo */
+  thead { display: none; }
+  table, tbody { display: block; }
+  #lista tr { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "item qtd" "sit acoes"; gap: 8px 12px; padding: 12px 14px; border-bottom: 1px solid var(--linha); align-items: center; }
+  #lista tr:last-child { border-bottom: 0; }
+  #lista td { display: block; padding: 0; border: 0; min-width: 0; }
+  #lista td:nth-child(1) { grid-area: item; }
+  #lista td:nth-child(2) { grid-area: qtd; }
+  #lista td:nth-child(4) { grid-area: sit; }
+  #lista td:nth-child(7) { grid-area: acoes; }
+  #lista .col-custo, #lista .col-preco, #lista .col-min { display: none; }
+  tr.st-zerado td:first-child, tr.st-baixo td:first-child { box-shadow: none; }
+  #lista tr.st-zerado { box-shadow: inset 4px 0 0 var(--zerado); }
+  #lista tr.st-baixo { box-shadow: inset 4px 0 0 var(--baixo); }
+  .medidor { width: 96px; }
+  .acoes .ic.editar { display: none; }
+  .tipos label { font-size: 11px; padding: 8px 2px; letter-spacing: -.01em; }
+  .campos { gap: 10px; }
+  .campo .dica { display: none; }
+  .tile strong { font-size: 22px; }
+  .sinc span { display: none; }
+}
+@media (pointer: coarse) {
+  .ic { width: 44px; height: 44px; }
+  .btn, .toggle, .busca { min-height: 44px; }
+  .chip { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after, body::after { animation: none !important; transition: none !important; transition-delay: 0s !important; }
+}
+</style>
+
+<a class="pular" href="#main">Pular para o estoque</a>
+<header class="topo">
+  <div class="wrap">
+    <img src="img/logo-bela.png" alt="">
+    <div class="marca"><b>Bela</b><span>Controle de estoque</span></div>
+    <div class="sinc" id="sinc"><i></i><span id="sincTxt">Conectando</span></div>
+  </div>
+</header>
+
+<main class="wrap" id="main" tabindex="-1">
+  <div id="avisoLeitura" class="leitura" hidden>Você está vendo o estoque no modo leitura. Peça a quem administra para te dar acesso de edição.</div>
+
+  <section class="resumo" aria-label="Resumo do estoque">
+    <div class="tile"><small>Itens cadastrados</small><strong class="num" id="rTotal">…</strong><em id="rTotalSub">físicos e orgânicos</em></div>
+    <div class="tile alerta"><small>Zerados</small><strong class="num" id="rZerado">…</strong><em>precisam de reposição</em></div>
+    <div class="tile aviso"><small>Abaixo do mínimo</small><strong class="num" id="rBaixo">…</strong><em>repor em breve</em></div>
+    <div class="tile"><small>Valor em estoque</small><strong class="num" id="rValor">…</strong><em>pelo preço de custo</em></div>
+  </section>
+
+  <div class="secoes" role="tablist" aria-label="Seções do estoque">
+    <button class="secao-btn" role="tab" data-secao="fisicos" aria-selected="true">
+      <div><b>Físicos</b><br><span>Adubos, vasos, ferramentas…</span></div><span class="cont num" id="cFisicos">0</span>
+    </button>
+    <button class="secao-btn" role="tab" data-secao="organicos" aria-selected="false">
+      <div><b>Orgânicos</b><br><span>Flores, plantas e mudas</span></div><span class="cont num" id="cOrganicos">0</span>
+    </button>
+  </div>
+
+  <div class="corpo">
+    <section class="painel" aria-label="Itens">
+      <div class="painel-topo">
+        <div class="chips" id="chips"></div>
+        <div class="linha-ctrl">
+          <label class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="busca" type="search" placeholder="Buscar item…" aria-label="Buscar item"></label>
+          <label class="toggle"><input type="checkbox" id="soFalta"> Só em falta</label>
+          <button class="btn btn-ouro" id="btnNovo" type="button">+ Novo item</button>
+        </div>
+      </div>
+      <div class="tabela-wrap">
+        <table>
+          <thead><tr>
+            <th>Item</th><th class="dir">Quantidade</th><th class="col-min dir">Mínimo</th>
+            <th>Situação</th><th class="col-custo dir">Custo</th><th class="col-preco dir">Venda</th><th class="dir"><span class="sr">Ações</span></th>
+          </tr></thead>
+          <tbody id="lista"></tbody>
+        </table>
+      </div>
+      <div class="vazio" id="vazio"><b>Carregando o estoque…</b>Os itens aparecem aqui assim que o banco responder.</div>
+    </section>
+
+    <aside class="painel hist" aria-label="Últimas movimentações">
+      <div class="painel-topo"><h2>Últimas movimentações</h2></div>
+      <ul id="historico"></ul>
+      <div class="vazio" id="histVazio"><b>Nada ainda</b>Entradas, vendas e perdas aparecem aqui.</div>
+    </aside>
+  </div>
+</main>
+
+<!-- Item -->
+<dialog id="dlgItem" aria-labelledby="dlgItemTit">
+  <div class="dlg-topo"><h3 id="dlgItemTit">Novo item</h3><button type="button" data-fechar aria-label="Fechar">×</button></div>
+  <form class="dlg" id="formItem">
+    <div class="campos">
+      <div class="campo cheio"><label for="fNome">Nome do item</label><input id="fNome" required maxlength="80" placeholder="Ex.: Vaso de cerâmica nº 14"></div>
+      <div class="campo"><label for="fSecao">Seção</label><select id="fSecao"><option value="fisicos">Físicos</option><option value="organicos">Orgânicos</option></select></div>
+      <div class="campo"><label for="fCat">Categoria</label><select id="fCat"></select></div>
+      <div class="campo"><label for="fQtd">Quantidade atual</label><input id="fQtd" type="number" min="0" step="any" inputmode="decimal" value="0"></div>
+      <div class="campo"><label for="fUn">Unidade</label><select id="fUn">
+        <option value="un">Unidade (un)</option><option value="kg">Quilo (kg)</option><option value="g">Grama (g)</option><option value="L">Litro (L)</option>
+        <option value="saco">Saco</option><option value="pct">Pacote</option><option value="cx">Caixa</option><option value="haste">Haste</option><option value="maço">Maço</option><option value="dz">Dúzia</option><option value="vaso">Vaso</option><option value="bandeja">Bandeja</option>
+      </select></div>
+      <div class="campo"><label for="fMin">Estoque mínimo</label><input id="fMin" type="number" min="0" step="any" inputmode="decimal" value="0"><span class="dica">Avisa quando chegar nesse número.</span></div>
+      <div class="campo"><label for="fVal">Validade (opcional)</label><input id="fVal" type="date"><span class="dica">Para flores, adubos e defensivos.</span></div>
+      <div class="campo"><label for="fCusto">Custo unitário (R$)</label><input id="fCusto" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div>
+      <div class="campo"><label for="fPreco">Preço de venda (R$)</label><input id="fPreco" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div>
+      <div class="campo cheio"><label for="fObs">Observações</label><textarea id="fObs" maxlength="300" placeholder="Fornecedor, tamanho, cor…"></textarea></div>
+    </div>
+    <p class="erro-msg" id="itemErro" hidden></p>
+    <div class="dlg-rodape">
+      <button type="button" class="btn btn-linha esq" id="btnExcluir" hidden>Excluir item</button>
+      <button type="button" class="btn btn-linha" data-fechar>Cancelar</button>
+      <button type="submit" class="btn btn-rosa" id="btnSalvarItem">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Movimentação -->
+<dialog id="dlgMov" aria-labelledby="dlgMovTit">
+  <div class="dlg-topo"><h3 id="dlgMovTit">Movimentar</h3><button type="button" data-fechar aria-label="Fechar">×</button></div>
+  <form class="dlg" id="formMov">
+    <div class="tipos" role="radiogroup" aria-label="Tipo de movimentação">
+      <label><input type="radio" name="tipo" value="entrada" checked><span>Entrada</span></label>
+      <label><input type="radio" name="tipo" value="saida"><span>Saída</span></label>
+      <label><input type="radio" name="tipo" value="perda"><span>Perda</span></label>
+      <label><input type="radio" name="tipo" value="ajuste"><span>Contagem</span></label>
+    </div>
+    <div class="campos">
+      <div class="campo"><label for="mQtd" id="mQtdLbl">Quantidade</label><input id="mQtd" type="number" min="0" step="any" inputmode="decimal" required></div>
+      <div class="campo"><label for="mMotivo">Motivo (opcional)</label><input id="mMotivo" maxlength="120" placeholder="Ex.: venda balcão, chegou fornecedor"></div>
+    </div>
+    <p class="prev num" id="mPrev"></p>
+    <p class="erro-msg" id="movErro" hidden></p>
+    <div class="dlg-rodape">
+      <button type="button" class="btn btn-linha" data-fechar>Cancelar</button>
+      <button type="submit" class="btn btn-rosa" id="btnSalvarMov">Confirmar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Confirmar exclusão -->
+<dialog id="dlgExcluir" aria-labelledby="dlgExcTit">
+  <div class="dlg-topo"><h3 id="dlgExcTit">Excluir item?</h3><button type="button" data-fechar aria-label="Fechar">×</button></div>
+  <form class="dlg" id="formExcluir">
+    <p id="excTxt"></p>
+    <div class="dlg-rodape">
+      <button type="button" class="btn btn-linha" data-fechar>Cancelar</button>
+      <button type="submit" class="btn btn-perigo">Excluir</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Categorias -->
+<dialog id="dlgCat" aria-labelledby="dlgCatTit">
+  <div class="dlg-topo"><h3 id="dlgCatTit">Categorias</h3><button type="button" data-fechar aria-label="Fechar">×</button></div>
+  <form class="dlg" id="formCat">
+    <ul class="cat-lista" id="catLista"></ul>
+    <div class="campo"><label for="catNova">Nova categoria</label><input id="catNova" maxlength="40" placeholder="Ex.: Substratos"></div>
+    <p class="erro-msg" id="catErro" hidden></p>
+    <div class="dlg-rodape">
+      <button type="button" class="btn btn-linha" data-fechar>Fechar</button>
+      <button type="submit" class="btn btn-rosa">Adicionar</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+  const nf = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 3 });
+  const norm = (s) => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const num = (v) => { const n = parseFloat(v); return Number.isFinite(n) ? n : null; };
+  const SECOES = { fisicos: "Físicos", organicos: "Orgânicos" };
+  const TIPOS = { entrada: { nome: "Entrada", sinal: "+" }, saida: { nome: "Saída", sinal: "−" }, perda: { nome: "Perda", sinal: "−" }, ajuste: { nome: "Contagem", sinal: "=" } };
+
+  const estado = {
+    secao: "fisicos", categoria: "todas", busca: "", soFalta: false,
+    itens: [], movs: [], categorias: { fisicos: [], organicos: [] },
+    carregado: false, podeEscrever: true,
+  };
+  let db = null, user = null, meuId = null;
+  let itemEditando = null, itemMov = null, itemExcluir = null;
+  let primeiraEntradaFeita = false;
+
+  /* ---------- Utilidades de estado ---------- */
+  function situacao(it) {
+    const q = Number(it.quantidade) || 0, min = Number(it.minimo) || 0;
+    if (q <= 0) return "zerado";
+    if (min > 0 && q <= min) return "baixo";
+    return "ok";
+  }
+  function diasValidade(it) {
+    if (!it.validade) return null;
+    const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+    const v = new Date(it.validade + "T00:00:00");
+    if (isNaN(v)) return null;
+    return Math.round((v - hoje) / 86400000);
+  }
+  // Escala do medidor: o mínimo fica a meio caminho, para "baixo" e "cheio" lerem de longe
+  function escala(i) { const min = Number(i.minimo) || 0, q = Math.max(0, Number(i.quantidade) || 0); return Math.max(min * 2, q, 1); }
+  function medidorHTML(i, st) {
+    const q = Math.max(0, Number(i.quantidade) || 0), min = Number(i.minimo) || 0, max = escala(i);
+    const pct = Math.min(1, q / max), marca = min > 0 ? (min / max) * 100 : null;
+    return `<span class="medidor ${st}" role="img" aria-label="${esc(nf.format(q))} de um mínimo de ${esc(nf.format(min))}">` +
+      `<b data-id="${esc(i.id)}" data-pct="${pct}" style="transform:scaleX(${pct})"></b>` +
+      (marca !== null ? `<i style="left:${marca}%"></i>` : "") + `</span>` +
+      (min > 0 ? `<span class="medidor-leg">mín. ${esc(nf.format(min))}</span>` : "");
+  }
+  const pctAnterior = new Map();
+  function animarMedidores() {
+    $$("#lista .medidor b").forEach((b) => {
+      const id = b.dataset.id, novo = Number(b.dataset.pct), velho = pctAnterior.get(id);
+      pctAnterior.set(id, novo);
+      if (velho === undefined || velho === novo) return;
+      b.style.transition = "none"; b.style.transform = `scaleX(${velho})`;
+      requestAnimationFrame(() => requestAnimationFrame(() => { b.style.transition = ""; b.style.transform = `scaleX(${novo})`; }));
+    });
+  }
+  function quando(iso) {
+    const d = new Date(iso); if (isNaN(d)) return "";
+    const diff = (Date.now() - d) / 60000;
+    if (diff < 1) return "agora";
+    if (diff < 60) return `há ${Math.floor(diff)} min`;
+    if (diff < 1440) return `há ${Math.floor(diff / 60)} h`;
+    return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  }
+  let tToast;
+  function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("on"); clearTimeout(tToast); tToast = setTimeout(() => el.classList.remove("on"), 2400); }
+  function sinc(tipo, txt) { const el = $("#sinc"); el.className = "sinc " + (tipo || ""); $("#sincTxt").textContent = txt; }
+  function erroEscrita(e) {
+    if (e && e.code === "invalid_argument" && estado.podeEscrever) { estado.podeEscrever = false; aplicarLeitura(); return "Você não tem permissão para alterar o estoque."; }
+    if (e && e.code === "quota_exceeded") return "O banco do estoque está cheio. Exclua movimentações ou itens antigos.";
+    return "Não foi possível salvar agora. Verifique a internet e tente de novo.";
+  }
+
+  /* ---------- Renderização ---------- */
+  function render() {
+    const itens = estado.itens;
+    // Resumo
+    $("#rTotal").textContent = estado.carregado ? itens.length : "…";
+    $("#rZerado").textContent = estado.carregado ? itens.filter((i) => situacao(i) === "zerado").length : "…";
+    $("#rBaixo").textContent = estado.carregado ? itens.filter((i) => situacao(i) === "baixo").length : "…";
+    const valor = itens.reduce((s, i) => s + (Number(i.custo) || 0) * Math.max(0, Number(i.quantidade) || 0), 0);
+    $("#rValor").textContent = estado.carregado ? brl.format(valor) : "…";
+    const nf_ = itens.filter((i) => i.secao === "fisicos").length;
+    $("#cFisicos").textContent = nf_;
+    $("#cOrganicos").textContent = itens.length - nf_;
+    $("#rTotalSub").textContent = `${nf_} físicos · ${itens.length - nf_} orgânicos`;
+    $$(".secao-btn").forEach((b) => b.setAttribute("aria-selected", b.dataset.secao === estado.secao));
+
+    // Chips de categoria
+    const cats = estado.categorias[estado.secao] || [];
+    if (estado.categoria !== "todas" && !cats.includes(estado.categoria)) estado.categoria = "todas";
+    const daSecao = itens.filter((i) => i.secao === estado.secao);
+    const contaCat = (c) => daSecao.filter((i) => i.categoria === c).length;
+    $("#chips").innerHTML =
+      `<button class="chip" data-cat="todas" aria-pressed="${estado.categoria === "todas"}">Todas (${daSecao.length})</button>` +
+      cats.map((c) => `<button class="chip" data-cat="${esc(c)}" aria-pressed="${estado.categoria === c}">${esc(c)} (${contaCat(c)})</button>`).join("") +
+      (estado.podeEscrever ? `<button class="chip add" id="btnCats" type="button">Editar categorias</button>` : "");
+
+    // Lista
+    const termo = norm(estado.busca.trim());
+    let lista = daSecao.filter((i) =>
+      (estado.categoria === "todas" || i.categoria === estado.categoria) &&
+      (!estado.soFalta || situacao(i) !== "ok") &&
+      (!termo || norm(`${i.nome} ${i.categoria} ${i.obs}`).includes(termo)));
+    const ordem = { zerado: 0, baixo: 1, ok: 2 };
+    lista.sort((a, b) => ordem[situacao(a)] - ordem[situacao(b)] || String(a.nome).localeCompare(String(b.nome), "pt-BR"));
+
+    const vazio = $("#vazio");
+    if (!estado.carregado) {
+      vazio.hidden = false;
+    } else if (!lista.length) {
+      vazio.hidden = false;
+      vazio.innerHTML = daSecao.length
+        ? "<b>Nenhum item encontrado</b>Mude a busca, a categoria ou desmarque “Só em falta”."
+        : `<b>Nenhum item em ${SECOES[estado.secao]} ainda</b>${estado.podeEscrever ? "Toque em “+ Novo item” para cadastrar o primeiro." : "Os itens aparecem aqui quando forem cadastrados."}`;
+    } else vazio.hidden = true;
+
+    $("#lista").innerHTML = lista.map((i) => {
+      const st = situacao(i);
+      const dv = diasValidade(i);
+      const venc = dv === null ? "" : dv < 0 ? `<span class="pill zerado">Vencido</span>` : dv <= 7 ? `<span class="pill vence">Vence ${dv === 0 ? "hoje" : `em ${dv}d`}</span>` : "";
+      const stTxt = { ok: "Em estoque", baixo: "Baixo", zerado: "Zerado" }[st];
+      const editar = estado.podeEscrever;
+      return `<tr class="st-${st}">
+        <td><div class="item-nome">${editar ? `<button type="button" class="item-link" data-editar="${esc(i.id)}">${esc(i.nome)}</button>` : esc(i.nome)}</div><div class="item-sub">${esc(i.categoria || "Sem categoria")}${i.obs ? " · " + esc(i.obs) : ""}</div></td>
+        <td class="dir"><span class="qtd num">${nf.format(Number(i.quantidade) || 0)} <small>${esc(i.unidade || "un")}</small></span>${medidorHTML(i, st)}</td>
+        <td class="col-min dir num">${nf.format(Number(i.minimo) || 0)}</td>
+        <td><span class="pill ${st}">${stTxt}</span> ${venc}</td>
+        <td class="col-custo dir num">${num(i.custo) !== null ? brl.format(i.custo) : `<span class="nada">sem custo</span>`}</td>
+        <td class="col-preco dir num">${num(i.preco) !== null ? brl.format(i.preco) : `<span class="nada">sem preço</span>`}</td>
+        <td><div class="acoes">${editar ? `
+          <button class="ic menos" data-rapido="saida" data-id="${esc(i.id)}" aria-label="Tirar 1 de ${esc(i.nome)}" title="Saída de 1">−</button>
+          <button class="ic mais" data-rapido="entrada" data-id="${esc(i.id)}" aria-label="Pôr 1 em ${esc(i.nome)}" title="Entrada de 1">+</button>
+          <button class="ic" data-mov="${esc(i.id)}" aria-label="Movimentar ${esc(i.nome)}" title="Movimentar"><svg viewBox="0 0 24 24"><path d="M7 4v16m0 0-3-3m3 3 3-3M17 20V4m0 0-3 3m3-3 3 3"/></svg></button>
+          <button class="ic editar" data-editar="${esc(i.id)}" aria-label="Editar ${esc(i.nome)}" title="Editar"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg></button>` : ""}
+        </div></td></tr>`;
+    }).join("");
+    animarMedidores();
+    if (estado.carregado && !primeiraEntradaFeita && lista.length) {
+      primeiraEntradaFeita = true;
+      const tb = $("#lista"); tb.classList.add("chegando");
+      setTimeout(() => tb.classList.remove("chegando"), 900);
+    }
+
+    renderHistorico();
+  }
+
+  async function renderHistorico() {
+    const movs = estado.movs;
+    $("#histVazio").hidden = movs.length > 0;
+    const ids = [...new Set(movs.map((m) => m.por).filter(Boolean))];
+    let perfis = {};
+    if (user && ids.length) { try { perfis = await user.profiles(ids); } catch { perfis = {}; } }
+    $("#historico").innerHTML = movs.map((m) => {
+      const t = TIPOS[m.tipo] || TIPOS.ajuste;
+      const quem = (m.por && perfis[m.por] && perfis[m.por].name) || "";
+      const qtdTxt = m.tipo === "ajuste" ? `= ${nf.format(m.saldoApos)}` : `${t.sinal}${nf.format(m.qtd)}`;
+      return `<li><span class="mv ${esc(m.tipo)}" aria-hidden="true">${t.sinal}</span>
+        <div><div class="t">${esc(m.itemNome)}</div><div class="m">${esc(t.nome)}${m.motivo ? " · " + esc(m.motivo) : ""}<br>${esc(quando(m.em))}${quem ? " · " + esc(quem) : ""} · saldo ${esc(nf.format(m.saldoApos))}</div></div>
+        <span class="q num">${esc(qtdTxt)} ${esc(m.unidade || "")}</span></li>`;
+    }).join("");
+  }
+
+  function aplicarLeitura() {
+    $("#btnNovo").hidden = !estado.podeEscrever;
+    $("#avisoLeitura").hidden = estado.podeEscrever || !estado.carregado;
+    render();
+  }
+
+  /* ---------- Eventos de filtro ---------- */
+  $$(".secao-btn").forEach((b) => b.addEventListener("click", () => { estado.secao = b.dataset.secao; estado.categoria = "todas"; render(); }));
+  $("#chips").addEventListener("click", (e) => {
+    if (e.target.closest("#btnCats")) return abrirCategorias();
+    const c = e.target.closest("[data-cat]"); if (!c) return;
+    estado.categoria = c.dataset.cat; render();
+  });
+  let tBusca;
+  $("#busca").addEventListener("input", (e) => { clearTimeout(tBusca); tBusca = setTimeout(() => { estado.busca = e.target.value; render(); }, 120); });
+  $("#soFalta").addEventListener("change", (e) => { estado.soFalta = e.target.checked; render(); });
+  $$("dialog").forEach((d) => {
+    d.addEventListener("click", (e) => { if (e.target === d || e.target.closest("[data-fechar]")) d.close(); });
+  });
+
+  $("#lista").addEventListener("click", (e) => {
+    const r = e.target.closest("[data-rapido]");
+    if (r) return movimentar(r.dataset.id, r.dataset.rapido, 1, "", r);
+    const m = e.target.closest("[data-mov]"); if (m) return abrirMov(m.dataset.mov);
+    const ed = e.target.closest("[data-editar]"); if (ed) return abrirItem(ed.dataset.editar);
+  });
+
+  /* ---------- Item: criar / editar / excluir ---------- */
+  function preencherCats(secao, atual) {
+    const cats = estado.categorias[secao] || [];
+    const opts = cats.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`);
+    if (atual && !cats.includes(atual)) opts.push(`<option value="${esc(atual)}">${esc(atual)}</option>`);
+    $("#fCat").innerHTML = opts.length ? opts.join("") : `<option value="">Sem categoria</option>`;
+    if (atual) $("#fCat").value = atual;
+  }
+  $("#fSecao").addEventListener("change", (e) => preencherCats(e.target.value));
+  $("#btnNovo").addEventListener("click", () => abrirItem(null));
+
+  function abrirItem(id) {
+    if (!estado.podeEscrever) return;
+    itemEditando = id ? estado.itens.find((i) => i.id === id) : null;
+    const it = itemEditando || { secao: estado.secao, categoria: estado.categoria !== "todas" ? estado.categoria : "", quantidade: 0, minimo: 0, unidade: estado.secao === "organicos" ? "haste" : "un" };
+    $("#dlgItemTit").textContent = itemEditando ? "Editar item" : `Novo item em ${SECOES[it.secao]}`;
+    $("#fNome").value = it.nome || "";
+    $("#fSecao").value = it.secao;
+    preencherCats(it.secao, it.categoria);
+    $("#fQtd").value = it.quantidade ?? 0;
+    $("#fQtd").disabled = !!itemEditando;
+    $("#fQtd").title = itemEditando ? "Use Movimentar para mudar a quantidade" : "";
+    $("#fUn").value = it.unidade || "un";
+    $("#fMin").value = it.minimo ?? 0;
+    $("#fVal").value = it.validade || "";
+    $("#fCusto").value = it.custo ?? "";
+    $("#fPreco").value = it.preco ?? "";
+    $("#fObs").value = it.obs || "";
+    $("#btnExcluir").hidden = !itemEditando;
+    $("#itemErro").hidden = true;
+    $("#dlgItem").showModal();
+    $("#fNome").focus();
+  }
+
+  $("#formItem").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nome = $("#fNome").value.trim();
+    if (!nome) return;
+    const corpo = {
+      nome, secao: $("#fSecao").value, categoria: $("#fCat").value || "",
+      unidade: $("#fUn").value, minimo: num($("#fMin").value) ?? 0,
+      validade: $("#fVal").value || "", custo: num($("#fCusto").value), preco: num($("#fPreco").value),
+      obs: $("#fObs").value.trim(), atualizadoEm: new Date().toISOString(), atualizadoPor: meuId,
+    };
+    const btn = $("#btnSalvarItem"); btn.disabled = true;
+    try {
+      if (itemEditando) {
+        await db.collection("itens").doc(itemEditando.id).update(corpo);
+        toast("Item atualizado");
+      } else {
+        const qtd = Math.max(0, num($("#fQtd").value) ?? 0);
+        const ref = db.collection("itens").doc();
+        await ref.set({ ...corpo, quantidade: qtd, criadoEm: corpo.atualizadoEm });
+        if (qtd > 0) await registrarMov({ id: ref.id, nome, unidade: corpo.unidade }, "entrada", qtd, qtd, "Cadastro inicial");
+        toast("Item cadastrado");
+        if (corpo.secao !== estado.secao) { estado.secao = corpo.secao; estado.categoria = "todas"; }
+      }
+      $("#dlgItem").close();
+    } catch (err) {
+      const el = $("#itemErro"); el.textContent = erroEscrita(err); el.hidden = false;
+    } finally { btn.disabled = false; }
+  });
+
+  $("#btnExcluir").addEventListener("click", () => {
+    itemExcluir = itemEditando; if (!itemExcluir) return;
+    $("#excTxt").textContent = `“${itemExcluir.nome}” sai do estoque. As movimentações dele continuam no histórico.`;
+    $("#dlgItem").close(); $("#dlgExcluir").showModal();
+  });
+  $("#formExcluir").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try { await db.collection("itens").doc(itemExcluir.id).delete(); toast("Item excluído"); }
+    catch (err) { toast(erroEscrita(err)); }
+    $("#dlgExcluir").close();
+  });
+
+  /* ---------- Movimentações ---------- */
+  function abrirMov(id) {
+    itemMov = estado.itens.find((i) => i.id === id); if (!itemMov) return;
+    $("#dlgMovTit").textContent = itemMov.nome;
+    $("#formMov").reset();
+    $("#movErro").hidden = true;
+    atualizarPrev();
+    $("#dlgMov").showModal();
+    $("#mQtd").focus();
+  }
+  function calcSaldo(atual, tipo, q) {
+    if (tipo === "entrada") return atual + q;
+    if (tipo === "ajuste") return q;
+    return atual - q;
+  }
+  function atualizarPrev() {
+    if (!itemMov) return;
+    const tipo = $("#formMov").tipo.value;
+    $("#mQtdLbl").textContent = tipo === "ajuste" ? "Quantidade contada" : "Quantidade";
+    const atual = Number(itemMov.quantidade) || 0;
+    const q = num($("#mQtd").value);
+    const un = itemMov.unidade || "un";
+    if (q === null) { $("#mPrev").textContent = `Saldo atual: ${nf.format(atual)} ${un}`; return; }
+    const novo = calcSaldo(atual, tipo, q);
+    $("#mPrev").textContent = `Saldo: ${nf.format(atual)} → ${nf.format(novo)} ${un}` + (novo < 0 ? " (não há tudo isso em estoque)" : "");
+  }
+  $("#formMov").addEventListener("input", atualizarPrev);
+  $("#formMov").addEventListener("change", atualizarPrev);
+  $("#formMov").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const q = num($("#mQtd").value);
+    if (q === null || q < 0 || (q === 0 && $("#formMov").tipo.value !== "ajuste")) {
+      const el = $("#movErro"); el.textContent = "Informe uma quantidade maior que zero."; el.hidden = false; return;
+    }
+    const tipoSel = $("#formMov").tipo.value, atualSel = Number(itemMov.quantidade) || 0;
+    if ((tipoSel === "saida" || tipoSel === "perda") && q > atualSel) {
+      const el = $("#movErro"); el.textContent = `Só há ${nf.format(atualSel)} ${itemMov.unidade || "un"} em estoque. Se a contagem está errada, use “Contagem”.`; el.hidden = false; return;
+    }
+    const btn = $("#btnSalvarMov"); btn.disabled = true;
+    const ok = await movimentar(itemMov.id, $("#formMov").tipo.value, q, $("#mMotivo").value.trim());
+    btn.disabled = false;
+    if (ok) $("#dlgMov").close();
+  });
+
+  const ocupado = new Set();
+  async function movimentar(id, tipo, q, motivo, botao) {
+    const it = estado.itens.find((i) => i.id === id); if (!it || ocupado.has(id)) return false;
+    const atual = Number(it.quantidade) || 0;
+    const novo = Math.round(calcSaldo(atual, tipo, q) * 1000) / 1000;
+    if (tipo === "saida" && atual <= 0 && botao) { toast(`${it.nome} já está zerado`); return false; }
+    ocupado.add(id); if (botao) botao.disabled = true;
+    try {
+      await db.collection("itens").doc(id).update({ quantidade: novo, atualizadoEm: new Date().toISOString(), atualizadoPor: meuId });
+      await registrarMov(it, tipo, q, novo, motivo);
+      toast(`${it.nome}: ${nf.format(novo)} ${it.unidade || "un"}`);
+      return true;
+    } catch (err) {
+      const msg = erroEscrita(err);
+      if ($("#dlgMov").open) { const el = $("#movErro"); el.textContent = msg; el.hidden = false; } else toast(msg);
+      return false;
+    } finally { ocupado.delete(id); if (botao) botao.disabled = false; }
+  }
+  function registrarMov(it, tipo, q, saldo, motivo) {
+    return db.collection("movimentos").add({
+      itemId: it.id, itemNome: it.nome, unidade: it.unidade || "un",
+      tipo, qtd: q, saldoApos: saldo, motivo: motivo || "", em: new Date().toISOString(), por: meuId,
+    });
+  }
+
+  /* ---------- Categorias ---------- */
+  function abrirCategorias() {
+    renderCats();
+    $("#dlgCatTit").textContent = `Categorias de ${SECOES[estado.secao]}`;
+    $("#catErro").hidden = true;
+    $("#dlgCat").showModal();
+    $("#catNova").focus();
+  }
+  function renderCats() {
+    const cats = estado.categorias[estado.secao] || [];
+    $("#catLista").innerHTML = cats.length
+      ? cats.map((c) => `<li><span>${esc(c)}</span><button type="button" class="ic menos" data-rmcat="${esc(c)}" aria-label="Remover ${esc(c)}">×</button></li>`).join("")
+      : `<li><span>Nenhuma categoria ainda.</span></li>`;
+  }
+  async function salvarCats(novas) {
+    const corpo = { ...estado.categorias, [estado.secao]: novas };
+    await db.doc("config/categorias").set(corpo);
+  }
+  $("#formCat").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nome = $("#catNova").value.trim(); if (!nome) return;
+    const cats = estado.categorias[estado.secao] || [];
+    if (cats.some((c) => norm(c) === norm(nome))) { const el = $("#catErro"); el.textContent = "Essa categoria já existe."; el.hidden = false; return; }
+    try { await salvarCats([...cats, nome]); $("#catNova").value = ""; $("#catErro").hidden = true; }
+    catch (err) { const el = $("#catErro"); el.textContent = erroEscrita(err); el.hidden = false; }
+  });
+  $("#catLista").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-rmcat]"); if (!b) return;
+    const c = b.dataset.rmcat;
+    const emUso = estado.itens.filter((i) => i.secao === estado.secao && i.categoria === c).length;
+    if (emUso) { const el = $("#catErro"); el.textContent = `“${c}” tem ${emUso} item(ns). Mude a categoria deles antes de remover.`; el.hidden = false; return; }
+    try { await salvarCats((estado.categorias[estado.secao] || []).filter((x) => x !== c)); }
+    catch (err) { const el = $("#catErro"); el.textContent = erroEscrita(err); el.hidden = false; }
+  });
+
+  /* ---------- Conexão com o banco ---------- */
+  async function iniciar() {
+    render();
+    if (!window.claude || !window.claude.use) { sinc("erro", "Sem conexão com o banco"); return; }
+    db = await window.claude.use("db");
+    user = await window.claude.use("user");
+    if (!db) {
+      sinc("erro", "Banco indisponível");
+      $("#vazio").innerHTML = "<b>Não foi possível abrir o estoque</b>Entre na sua conta do Claude e abra esta página de novo.";
+      $("#btnNovo").hidden = true;
+      return;
+    }
+    if (user) {
+      meuId = await user.id();
+      const pode = await user.can("data.write");
+      if (pode === false) estado.podeEscrever = false;
+    }
+    let pendentes = 3;
+    const timer = setTimeout(() => { if (!estado.carregado) { sinc("erro", "Sem resposta do banco"); $("#vazio").innerHTML = "<b>O estoque está demorando para carregar</b>Confira a internet. A página continua tentando sozinha."; } }, 10000);
+    const pronto = (snap) => {
+      if (snap.metadata && snap.metadata.fromCache) return;
+      if (pendentes > 0 && --pendentes === 0) { estado.carregado = true; clearTimeout(timer); sinc("ok", "Sincronizado"); aplicarLeitura(); }
+    };
+    const falha = (e) => { clearTimeout(timer); sinc("erro", e && e.code === "revoked" ? "Acesso encerrado" : "Erro de conexão"); };
+
+    db.collection("itens").onSnapshot((snap) => {
+      estado.itens = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      pronto(snap); render();
+    }, falha);
+    db.doc("config/categorias").onSnapshot((snap) => {
+      const d = snap.exists ? snap.data() : {};
+      estado.categorias = { fisicos: Array.isArray(d.fisicos) ? d.fisicos : [], organicos: Array.isArray(d.organicos) ? d.organicos : [] };
+      pronto(snap); render();
+      if ($("#dlgCat").open) renderCats();
+    }, falha);
+    db.collection("movimentos").orderBy("em", "desc").limit(40).onSnapshot((snap) => {
+      estado.movs = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      pronto(snap); renderHistorico();
+    }, falha);
+  }
+  document.addEventListener("visibilitychange", () => document.body.classList.toggle("pausado", document.hidden));
+  setInterval(renderHistorico, 60000); // atualiza "há x min"
+  iniciar();
+})();
+</script>

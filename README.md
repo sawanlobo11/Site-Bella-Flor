@@ -1,17 +1,46 @@
-# Floricultura Bela — Site
+# Floricultura Bela
 
-Site estático (HTML, CSS e JavaScript puros) com catálogo de produtos, filtros por categoria, busca, ordenação, sacola de compras e envio do pedido pelo WhatsApp.
+Sistemas da **Floricultura Bela**, floricultura e paisagismo em Teixeira de Freitas (BA).
 
-## Como abrir
-Basta abrir o arquivo `index.html` no navegador. Para publicar, envie a pasta para qualquer hospedagem estática (GitHub Pages, Netlify, Vercel etc.).
+- WhatsApp: (73) 99974-5122
+- Endereço: Rua Águas Claras, 375, Bela Vista, Teixeira de Freitas (BA)
+- Instagram: [@floriculturabelatx](https://www.instagram.com/floriculturabelatx/)
 
-## Como editar o catálogo
-Todos os produtos ficam em `assets/js/produtos.js`:
+## O que tem aqui
 
-- **Adicionar produto:** copie um bloco `{ ... }` da lista `PRODUTOS` e altere nome, preço, descrição e categoria.
-- **Fotos:** coloque a imagem em `assets/img/produtos/` e preencha o campo `imagem`. As fotos atuais são do banco gratuito Unsplash (licença livre para uso comercial); troque pelas fotos reais da loja quando quiser.
-- **Preço sob consulta:** use `preco: null`.
-- **Categorias:** edite o objeto `CATEGORIAS` (nome e foto de capa do círculo).
-- **WhatsApp e Instagram:** altere o objeto `LOJA`.
+| Pasta | O que é |
+| --- | --- |
+| [`site/`](site/) | Site da loja: banners, catálogo de produtos, sacola e pedido pelo WhatsApp. |
+| [`estoque/`](estoque/) | Controle de estoque interno, separado em produtos físicos e orgânicos. |
+| [`docs/`](docs/) | Identidade visual (cores, fontes, logo) e créditos das fotos. |
+| `.claude/skills/` | Skill de design `site-de-10k`, usada pelo Claude ao trabalhar neste projeto. |
 
-Endereço e textos das seções estão diretamente no `index.html`. A logo fica em `assets/img/logo-bela.png`.
+```
+.
+├── site/
+│   ├── index.html
+│   └── assets/
+│       ├── css/style.css
+│       ├── js/produtos.js     ← catálogo: edite aqui produtos e preços
+│       ├── js/main.js
+│       └── img/               ← logo, banners e fotos dos produtos
+├── estoque/
+│   ├── index.html             ← o sistema inteiro em um arquivo
+│   ├── img/logo-bela.png
+│   └── testes/teste-local.js  ← teste com banco falso
+├── docs/
+│   ├── identidade-visual.md
+│   └── creditos-das-fotos.md
+├── .claude/skills/site-de-10k/
+├── CLAUDE.md                  ← instruções para o Claude neste projeto
+└── README.md
+```
+
+## Onde ficam os dados
+
+- **Site:** não guarda dados. Os produtos ficam no arquivo `site/assets/js/produtos.js` e o pedido vai direto para o WhatsApp da loja.
+- **Estoque:** os itens, categorias e movimentações ficam no banco de dados do Claude, ligado ao link do sistema no claude.ai. O código está aqui no GitHub; os dados não. Detalhes em [`estoque/README.md`](estoque/README.md).
+
+## Como pedir mudanças
+
+Fale com o Claude em português simples, por exemplo: "muda o preço do Buquê Rosé para 169,90" ou "cria a categoria Orquídeas no estoque". Ele altera os arquivos, testa e salva aqui.
