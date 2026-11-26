@@ -1,0 +1,59 @@
+rules_version = '2';
+
+// Regras de segurança do banco da Floricultura Bela.
+// Só o dono e os e-mails que ele liberou em "Equipe" leem e alteram os dados.
+// Cole este arquivo inteiro em: Firebase, Firestore Database, aba Regras, e toque em Publicar.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function logado() {
+      return request.auth != null && request.auth.token.email != null;
+    }
+    function email() {
+      return request.auth.token.email.lower();
+    }
+    function caminhoDono() {
+      return /databases/$(database)/documents/config/dono;
+    }
+    function dono() {
+      return logado() && exists(caminhoDono()) && get(caminhoDono()).data.uid == request.auth.uid;
+    }
+    function daEquipe() {
+      return logado() && exists(/databases/$(database)/documents/equipe/$(email()));
+    }
+    function membro() {
+      return dono() || daEquipe();
+    }
+
+    // Dono da loja: a primeira pessoa que confirmar vira o dono; depois não muda mais por aqui.
+    match /config/dono {
+      allow read: if logado();
+      allow create: if logado() && !exists(caminhoDono()) && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Categorias e outras configurações da loja
+    match /config/{doc} {
+      allow read, write: if doc != "dono" && membro();
+    }
+
+    // Equipe liberada (o documento tem o e-mail como nome). Cada pessoa consegue
+    // conferir se o próprio e-mail foi liberado; só o dono libera ou tira acesso.
+    match /equipe/{mail} {
+      allow get: if logado() && mail == email();
+      allow list, get: if membro();
+      allow write: if dono();
+    }
+
+    // Nome de quem fez cada coisa no histórico
+    match /pessoas/{uid} {
+      allow read: if membro();
+      allow write: if logado() && request.auth.uid == uid;
+    }
+
+    // Dados da loja
+    match /itens/{id} { allow read, write: if membro(); }
+    match /movimentos/{id} { allow read, write: if membro(); }
+    match /vendas/{id} { allow read, write: if membro(); }
+  }
+}

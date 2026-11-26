@@ -41,7 +41,7 @@ Sistemas da **Floricultura Bela**, floricultura e paisagismo em Teixeira de Frei
 ## Onde ficam os dados
 
 - **Site:** não guarda dados. Os produtos ficam no arquivo `site/assets/js/produtos.js` e o pedido vai direto para o WhatsApp da loja.
-- **Estoque e vendas:** itens, categorias, movimentações e vendas ficam no banco de dados do Claude, ligado ao link do sistema no claude.ai. O código está aqui no GitHub; os dados não. Detalhes em [`estoque/README.md`](estoque/README.md).
+- **Estoque e vendas:** itens, categorias, movimentações e vendas ficam no Firebase (versão do celular, https://sawanlobo11.github.io/Site-Bella-Flor/estoque/) ou no banco do Claude (versão do claude.ai). O código está aqui no GitHub; os dados não. Detalhes em [`estoque/README.md`](estoque/README.md).
 
 ## Como pedir mudanças
 

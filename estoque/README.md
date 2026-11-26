@@ -13,10 +13,14 @@ O estoque é separado em duas seções:
 
 ## Onde usar
 
-O sistema está publicado no claude.ai:
-**https://claude.ai/artifact/DH811DcYxuoDPiueBXgVyi**
+O mesmo arquivo (`index.html`) funciona de dois jeitos:
 
-Para a equipe usar, compartilhe pelo menu **Compartilhar** da página. Quem recebe acesso de **Colaborador** pode cadastrar e movimentar; quem tem só **Visualizador** apenas vê.
+- **No celular ou navegador, sem conta do Claude (principal):** https://sawanlobo11.github.io/Site-Bella-Flor/estoque/
+  Login por e-mail e senha, dados no Firebase. O dono libera cada funcionário em **Minha conta**, **Equipe**. Configuração inicial em [`firebase/COMO-CONFIGURAR.md`](firebase/COMO-CONFIGURAR.md).
+- **Dentro do claude.ai:** https://claude.ai/artifact/DH811DcYxuoDPiueBXgVyi
+  Usa o banco do próprio Claude e pede conta do Claude. Os dados das duas versões são separados.
+
+Para virar ícone na tela do celular: no iPhone (Safari), Compartilhar, **Adicionar à Tela de Início**; no Android (Chrome), três pontinhos, **Adicionar à tela inicial**.
 
 ## O que dá para fazer
 
@@ -59,7 +63,9 @@ O mesmo link se reorganiza sozinho:
 
 ## Onde ficam os dados
 
-O **código** do sistema está aqui (`index.html`). Os **dados** ficam no banco de dados do Claude, ligado ao link acima:
+O **código** do sistema está aqui (`index.html`). Os **dados** ficam no **Firebase** (versão do celular) ou no banco do Claude (versão do claude.ai). No Firebase, as regras de segurança estão em `firebase/firestore.rules`; a estrutura abaixo vale para os dois. No Firebase existem ainda `config/dono` (quem é o dono), `equipe/<e-mail>` (quem foi liberado) e `pessoas/<id>` (nome de quem fez cada coisa).
+
+No banco do Claude:
 
 - Funcionam em qualquer aparelho e atualizam em tempo real para todos.
 - Continuam salvos quando o sistema é atualizado.
@@ -87,10 +93,11 @@ O código da venda (ex.: #9SGS) são os 4 últimos caracteres do `<id>`. A tela 
    node estoque/testes/teste-local.js
    node estoque/testes/teste-vendas.js
    node estoque/testes/teste-extras.js
+   node estoque/testes/teste-firebase.js
    node estoque/testes/capturas.js
    ```
    O teste de vendas roda em computador, iPhone, Android, tablet e celular deitado.
    As capturas de tela ficam em `estoque/testes/saida/`.
-3. Publique de novo no mesmo link pelo Claude (ferramenta Artifact, com a pasta `estoque/` como raiz, `img/logo-bela.png` junto e as permissões `db`, `user` com perfil e `downloads`). Os dados continuam intactos.
+3. Salve no GitHub: a versão do celular publica sozinha pelo GitHub Pages. Para a versão do claude.ai, publique de novo no mesmo link pelo Claude (ferramenta Artifact, com a pasta `estoque/` como raiz, `img/logo-bela.png` junto e as permissões `db`, `user` com perfil e `downloads`). Os dados continuam intactos.
 
 A revisão de UI/UX que guiou esta versão está em [`docs/auditoria-ui-ux.md`](../docs/auditoria-ui-ux.md).
