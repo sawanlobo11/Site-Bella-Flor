@@ -59,7 +59,7 @@ window.claude = { use: async (n) => {
         await p.selectOption('#fUn', un); await p.fill('#fMin', min); await p.fill('#fCusto', custo); await p.press('#fNome', 'Enter'); await p.waitForTimeout(150);
       }
       await p.click('[data-rapido="saida"]'); await p.waitForTimeout(150);
-      await p.click('[data-mov]'); await p.click('#formMov label:nth-child(3)'); await p.fill('#mQtd', '2'); await p.fill('#mMotivo', 'Embalagem rasgada');
+      await p.click('[data-mov]'); await p.click('#formMov label:has(input[value="perda"])'); await p.fill('#mQtd', '2'); await p.fill('#mMotivo', 'Embalagem rasgada');
       if (n === 'd') await p.screenshot({ path: path.join(SAIDA, 'movimentacao.png') });
       await p.press('#mMotivo', 'Enter'); await p.waitForTimeout(300);
       fs.writeFileSync(path.join(SAIDA, 'lista.json'), JSON.stringify(await p.evaluate(() => document.querySelector('#lista').innerText)));

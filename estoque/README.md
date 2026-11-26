@@ -28,7 +28,19 @@ Para a equipe usar, compartilhe pelo menu **Compartilhar** da página. Quem rece
 - Ver o histórico das últimas 40 movimentações, com quem fez e quando.
 - Criar e remover categorias pela própria página.
 
-Uma saída ou perda nunca deixa o estoque negativo.
+Uma saída ou perda nunca deixa o estoque negativo. Os botões **−** e **+** mostram um aviso com **Desfazer** por 5 segundos, para corrigir um toque errado.
+
+Os campos de número aceitam vírgula (5,90) e ponto (5.90). Os blocos **Zerados** e **Abaixo do mínimo** do resumo filtram a lista. No computador, a tabela ordena por item, quantidade ou situação, e a tecla **/** leva direto para a busca.
+
+### Celular, tablet e computador
+O mesmo link se reorganiza sozinho:
+- **Celular:** abas na barra de baixo (com o número de itens em falta), botão flutuante "Novo item", venda atual numa gaveta que sobe de baixo (fecha com o X, tocando fora ou arrastando para baixo) e janelas que sobem da parte de baixo.
+- **Celular deitado:** abas no topo, para sobrar altura.
+- **Tablet:** abas no topo e venda atual na gaveta.
+- **Computador:** barra lateral, tabela completa e venda atual ao lado dos produtos.
+
+### Planilhas
+"Baixar planilha" gera um arquivo CSV (abre no Excel e no Google Planilhas): o estoque inteiro, ou as vendas do período escolhido no Faturamento.
 
 ### Vendas
 - Toque nos produtos para montar a venda. Não dá para vender mais do que há em estoque, e produtos zerados ficam desativados.
@@ -60,7 +72,7 @@ O **código** do sistema está aqui (`index.html`). Os **dados** ficam no banco 
 | --- | --- |
 | `itens/<id>` | `nome`, `secao` (`fisicos` ou `organicos`), `categoria`, `quantidade`, `unidade`, `minimo`, `validade` (AAAA-MM-DD), `custo`, `preco`, `obs`, `criadoEm`, `atualizadoEm`, `atualizadoPor` |
 | `movimentos/<id>` | `itemId`, `itemNome`, `unidade`, `tipo` (`entrada`, `saida`, `perda`, `ajuste`), `qtd`, `saldoApos`, `motivo`, `em` (data e hora), `por` |
-| `vendas/<id>` | `em`, `itens` (lista com `itemId` ou nulo para avulso, `nome`, `unidade`, `qtd`, `preco`, `custo`, `subtotal`), `subtotal`, `desconto`, `total`, `custoTotal`, `pagamento` (`pix`, `dinheiro`, `debito`, `credito`), `cliente`, `por`, `cancelada`, `canceladaEm`, `canceladaPor` |
+| `vendas/<id>` | `em`, `itens` (lista com `itemId` ou nulo para avulso, `nome`, `unidade`, `qtd`, `preco`, `custo`, `subtotal`), `subtotal`, `desconto`, `total`, `custoTotal`, `pagamento` (`pix`, `dinheiro`, `debito`, `credito`), `cliente`, `por`, `cancelada`, `canceladaEm`, `canceladaPor`, `estoqueBaixado`, `pendentes` (itens cujo estoque não baixou) |
 | `config/categorias` | `fisicos: [...]`, `organicos: [...]` |
 
 `atualizadoPor`, `por` e `canceladaPor` guardam só o código da pessoa, nunca o nome. O nome aparece na tela na hora de mostrar.
@@ -74,6 +86,11 @@ O código da venda (ex.: #9SGS) são os 4 últimos caracteres do `<id>`. A tela 
    ```
    node estoque/testes/teste-local.js
    node estoque/testes/teste-vendas.js
+   node estoque/testes/teste-extras.js
+   node estoque/testes/capturas.js
    ```
+   O teste de vendas roda em computador, iPhone, Android, tablet e celular deitado.
    As capturas de tela ficam em `estoque/testes/saida/`.
-3. Publique de novo no mesmo link pelo Claude (ferramenta Artifact, com a pasta `estoque/` como raiz e `img/logo-bela.png` junto). Os dados continuam intactos.
+3. Publique de novo no mesmo link pelo Claude (ferramenta Artifact, com a pasta `estoque/` como raiz, `img/logo-bela.png` junto e as permissões `db`, `user` com perfil e `downloads`). Os dados continuam intactos.
+
+A revisão de UI/UX que guiou esta versão está em [`docs/auditoria-ui-ux.md`](../docs/auditoria-ui-ux.md).

@@ -18,6 +18,8 @@ const TESTE = path.join(__dirname, '..', '_capturas.html');
 const APARELHOS = {
   iphone: devices['iPhone 13'],
   android: { ...devices['Galaxy S9+'], viewport: { width: 360, height: 740 } },
+  tablet: { ...devices['iPad (gen 7)'] },
+  deitado: { ...devices['iPhone 13 landscape'] },
   desktop: { viewport: { width: 1366, height: 768 } },
 };
 

@@ -23,7 +23,7 @@ const TESTE = path.join(__dirname, '..', '_teste-vendas.html');
   const b = await chromium.launch(); const erros = []; const falhas = [];
   const confere = (cond, msg) => { if (!cond) falhas.push(msg); };
 
-  const APARELHOS = [['d', { viewport: { width: 1280, height: 800 } }], ['iphone', devices['iPhone 13']], ['android', { ...devices['Galaxy S9+'], viewport: { width: 360, height: 740 } }]];
+  const APARELHOS = [['d', { viewport: { width: 1280, height: 800 } }], ['iphone', devices['iPhone 13']], ['android', { ...devices['Galaxy S9+'], viewport: { width: 360, height: 740 } }], ['tablet', devices['iPad (gen 7)']], ['deitado', devices['iPhone 13 landscape']]];
   for (const [n, ap] of APARELHOS) {
     const vp = ap.viewport;
     const ctx = await b.newContext({ ...ap, deviceScaleFactor: 1 });
@@ -96,16 +96,21 @@ const TESTE = path.join(__dirname, '..', '_teste-vendas.html');
     await toque('.periodos [data-periodo="mes"]'); await p.waitForTimeout(300);
     const barras = await p.$$eval('#fGraf .barra', (els) => els.length);
     confere(barras > 0, 'gráfico do mês sem barras');
-    const alvo = await p.$('#fGraf .alvo');
-    // Dica do gráfico: passar o mouse no computador, tocar no celular
-    const alvos = await p.$$('#fGraf .alvo'); const ult = alvos[alvos.length - 1];
+    // Dica do gráfico: passar o mouse no computador, tocar no celular (vale a posição, não só a barra)
+    const barrasEl = await p.$$('#fGraf .barra'); const ult = barrasEl[barrasEl.length - 1];
     if (ult) {
       await ult.evaluate((e) => e.scrollIntoView({ block: 'center' })); await p.waitForTimeout(150); const bb = await ult.boundingBox();
-      const emCima = await p.evaluate(([x, y]) => { const el = document.elementFromPoint(x, y); return el ? el.tagName + '.' + el.getAttribute('class') : ''; }, [bb.x + bb.width / 2, bb.y + bb.height - 4]);
-      confere(emCima.includes('alvo'), n + ': ponto do toque cai em ' + emCima);
-      if (ap.hasTouch) await p.touchscreen.tap(bb.x + bb.width / 2, bb.y + bb.height - 4); else await p.mouse.move(bb.x + bb.width / 2, bb.y + bb.height - 4);
+      const px = bb.x + bb.width / 2, py = bb.y + bb.height - 4;
+      const emCima = await p.evaluate(([x, y]) => { const el = document.elementFromPoint(x, y); return el && el.closest('#fGraf') ? 'grafico' : (el ? el.tagName + '.' + el.getAttribute('class') : ''); }, [px, py]);
+      confere(emCima === 'grafico', n + ': ponto do toque cai em ' + emCima);
+      if (ap.hasTouch) await p.touchscreen.tap(px, py); else await p.mouse.move(px, py);
       await p.waitForTimeout(250);
       confere(await p.evaluate(() => document.querySelector('#fDica').classList.contains('on')), n + ': dica do gráfico não apareceu');
+      if (!ap.hasTouch) {
+        // Teclado: foco no gráfico e setas
+        await p.mouse.move(2, 2); await p.focus('#fGraf'); await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(150);
+        confere(await p.evaluate(() => document.querySelector('#fDica').classList.contains('on')), n + ': setas do teclado não mostram a dica');
+      }
     }
     await p.screenshot({ path: path.join(SAIDA, `faturamento-${n}.png`), fullPage: true });
     const largura = await p.evaluate(() => document.documentElement.scrollWidth);
