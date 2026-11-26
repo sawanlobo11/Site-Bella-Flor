@@ -13,7 +13,7 @@ Sistemas da **Floricultura Bela**, floricultura e paisagismo em Teixeira de Frei
 | [`site/`](site/) | Site da loja: banners, catálogo de produtos, sacola e pedido pelo WhatsApp. |
 | [`estoque/`](estoque/) | Sistema interno: estoque (físicos e orgânicos), vendas com baixa automática e faturamento por dia, semana e mês. |
 | [`docs/`](docs/) | Identidade visual (cores, fontes, logo) e créditos das fotos. |
-| `.claude/skills/` | Skill de design `site-de-10k`, usada pelo Claude ao trabalhar neste projeto. |
+| `.claude/skills/` | Skills de design usadas pelo Claude neste projeto: `site-de-10k` e `ui-ux-pro-max`. |
 
 ```
 .
@@ -31,7 +31,9 @@ Sistemas da **Floricultura Bela**, floricultura e paisagismo em Teixeira de Frei
 ├── docs/
 │   ├── identidade-visual.md
 │   └── creditos-das-fotos.md
-├── .claude/skills/site-de-10k/
+├── .claude/skills/
+│   ├── site-de-10k/
+│   └── ui-ux-pro-max/         ← skill de UI/UX (licença MIT, Next Level Builder)
 ├── CLAUDE.md                  ← instruções para o Claude neste projeto
 └── README.md
 ```

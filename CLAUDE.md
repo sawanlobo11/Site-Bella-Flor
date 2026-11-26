@@ -21,3 +21,4 @@ Sistemas da Floricultura Bela (floricultura e paisagismo, Teixeira de Freitas, B
 - Dados de exemplo nunca entram no banco real do estoque. Só cadastre o que o dono passar.
 - Fotos atuais do site são do Unsplash, não da loja. Se o dono mandar fotos reais, substitua e atualize `docs/creditos-das-fotos.md`.
 - A skill `site-de-10k` serve para sites de vitrine com vídeo; para o estoque, aplique só a direção de design, o piso de qualidade, a revisão de texto e o autoteste.
+- A skill `ui-ux-pro-max` (MIT, de github.com/nextlevelbuilder/ui-ux-pro-max-skill) traz regras de UI/UX e uma busca local: `python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<consulta>" --domain <domínio>`. Use as recomendações dela dentro da identidade visual da Bela (`docs/identidade-visual.md`), nunca no lugar dela.
