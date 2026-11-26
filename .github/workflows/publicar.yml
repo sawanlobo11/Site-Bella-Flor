@@ -1,0 +1,39 @@
+# Publica o site e o sistema de estoque no GitHub Pages a cada atualização.
+# Site: https://sawanlobo11.github.io/Site-Bella-Flor/
+# Estoque e vendas: https://sawanlobo11.github.io/Site-Bella-Flor/estoque/
+name: Publicar no GitHub Pages
+
+on:
+  push:
+    branches: [main, claude/pensive-dirac-vz79ze]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Montar a pasta publicada
+        run: |
+          mkdir -p _site/estoque
+          cp -r site/. _site/
+          cp -r estoque/index.html estoque/firebase-config.js estoque/manifest.webmanifest estoque/img _site/estoque/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

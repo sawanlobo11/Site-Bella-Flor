@@ -1,0 +1,9 @@
+hostgator.env
+*.env
+revisao/
+node_modules/
+estoque/testes/saida/
+estoque/_teste.html
+.DS_Store
+__pycache__/
+*.pyc

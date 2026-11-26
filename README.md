@@ -1,16 +1,48 @@
-# Bella Flor — Site da floricultura
+# Floricultura Bela
 
-Site estático (HTML, CSS e JavaScript puros) com catálogo de produtos, filtros por categoria, busca, ordenação, sacola de compras e envio do pedido pelo WhatsApp.
+Sistemas da **Floricultura Bela**, floricultura e paisagismo em Teixeira de Freitas (BA).
 
-## Como abrir
-Basta abrir o arquivo `index.html` no navegador. Para publicar, envie a pasta para qualquer hospedagem estática (GitHub Pages, Netlify, Vercel etc.).
+- WhatsApp: (73) 99974-5122
+- Endereço: Rua Águas Claras, 375, Bela Vista, Teixeira de Freitas (BA)
+- Instagram: [@floriculturabelatx](https://www.instagram.com/floriculturabelatx/)
 
-## Como editar o catálogo
-Todos os produtos ficam em `assets/js/produtos.js`:
+## O que tem aqui
 
-- **Adicionar produto:** copie um bloco `{ ... }` da lista `PRODUTOS` e altere nome, preço, descrição e categoria.
-- **Usar fotos reais:** coloque a imagem em `assets/img/` e preencha o campo `imagem`, ex.: `imagem: "assets/img/buque-rosas.jpg"`. Sem foto, o site desenha uma ilustração automaticamente com as `cores` informadas.
-- **Categorias:** edite o objeto `CATEGORIAS`.
-- **WhatsApp:** altere `WHATSAPP_LOJA` (somente números, com 55 + DDD).
+| Pasta | O que é |
+| --- | --- |
+| [`site/`](site/) | Site da loja: banners, catálogo de produtos, sacola e pedido pelo WhatsApp. |
+| [`estoque/`](estoque/) | Sistema interno: estoque (físicos e orgânicos), vendas com baixa automática e faturamento por dia, semana e mês. |
+| [`docs/`](docs/) | Identidade visual (cores, fontes, logo) e créditos das fotos. |
+| `.claude/skills/` | Skills de design usadas pelo Claude neste projeto: `site-de-10k` e `ui-ux-pro-max`. |
 
-Endereço, telefone e horários estão diretamente no `index.html`, na seção "Contato".
+```
+.
+├── site/
+│   ├── index.html
+│   └── assets/
+│       ├── css/style.css
+│       ├── js/produtos.js     ← catálogo: edite aqui produtos e preços
+│       ├── js/main.js
+│       └── img/               ← logo, banners e fotos dos produtos
+├── estoque/
+│   ├── index.html             ← o sistema inteiro em um arquivo
+│   ├── img/logo-bela.png
+│   └── testes/                ← testes com banco falso (estoque e vendas)
+├── docs/
+│   ├── identidade-visual.md
+│   └── creditos-das-fotos.md
+├── .claude/skills/
+│   ├── site-de-10k/
+│   └── ui-ux-pro-max/         ← skill de UI/UX (licença MIT, Next Level Builder)
+├── CLAUDE.md                  ← instruções para o Claude neste projeto
+└── README.md
+```
+
+## Onde ficam os dados
+
+- **Site:** não guarda dados. Os produtos ficam no arquivo `site/assets/js/produtos.js` e o pedido vai direto para o WhatsApp da loja.
+- **Estoque e vendas:** itens, categorias, movimentações e vendas ficam no Firebase (versão do celular, https://sawanlobo11.github.io/Site-Bella-Flor/estoque/) ou no banco do Claude (versão do claude.ai). O código está aqui no GitHub; os dados não. Detalhes em [`estoque/README.md`](estoque/README.md).
+
+## Como pedir mudanças
+
+Fale com o Claude em português simples, por exemplo: "muda o preço do Buquê Rosé para 169,90" ou "cria a categoria Orquídeas no estoque". Ele altera os arquivos, testa e salva aqui.
