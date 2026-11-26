@@ -58,6 +58,14 @@ const TESTE = path.join(__dirname, '..', '_teste-extras.html');
   await p.click('#toast button'); await p.waitForTimeout(300);
   confere((await dados(id)).quantidade === 12.5, 'Desfazer não devolveu a quantidade');
 
+  // 3b. Histórico: ícone, texto e quantidade lado a lado, sem nada embolado
+  const hist = await p.evaluate(() => {
+    const li = document.querySelector('#historico li'); if (!li) return null;
+    const [ic, txt, q] = [...li.children];
+    return { fixo: getComputedStyle(ic).position, larguraTexto: txt.getBoundingClientRect().width, qtdDireita: q.getBoundingClientRect().left > txt.getBoundingClientRect().left };
+  });
+  confere(hist && hist.fixo === 'static' && hist.larguraTexto > 150 && hist.qtdDireita, 'histórico embolado: ' + JSON.stringify(hist));
+
   // 4. Contador de itens em falta e ordenação
   await p.evaluate(async () => { const db = await window.claude.use('db'); await db.collection('itens').doc('z').set({ nome: 'Antúrio', secao: 'fisicos', quantidade: 0, minimo: 2, unidade: 'un' }); });
   await p.waitForTimeout(200);

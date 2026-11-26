@@ -423,22 +423,22 @@ form.dlg { padding: var(--e-16); display: grid; gap: var(--e-12); }
 /* ================= Login (versão fora do Claude) ================= */
 .btn-conta { width: var(--alvo); height: var(--alvo); display: grid; place-items: center; padding: 0; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: transparent; color: #fff; flex-shrink: 0; }
 .btn-conta:active { transform: scale(.94); }
-.entrada { position: fixed; inset: 0; z-index: var(--z-toast); overflow-y: auto; background: var(--noite); color: #fff;
+.login { position: fixed; inset: 0; z-index: var(--z-toast); overflow-y: auto; background: var(--noite); color: #fff;
   display: flex; align-items: center; justify-content: center;
   padding: calc(24px + env(safe-area-inset-top, 0px)) var(--gutter-d) calc(24px + env(safe-area-inset-bottom, 0px)) var(--gutter); }
-.entrada-caixa { width: 100%; max-width: 400px; display: grid; gap: var(--e-16); }
-.entrada-marca { display: flex; flex-direction: column; align-items: center; gap: var(--e-8); text-align: center; }
-.entrada-marca img { width: 88px; height: 88px; border-radius: 50%; }
-.entrada-marca b { font-family: var(--script); font-weight: 400; font-size: 40px; line-height: 1; }
-.entrada-marca span { font-size: var(--t-14); color: var(--claro); }
-.entrada-card { background: var(--cartao); color: var(--texto); border-radius: var(--r-16); padding: var(--e-24) var(--e-16); display: grid; gap: var(--e-12); }
-.entrada-card h1 { margin: 0; font-size: 22px; }
-.entrada-card p { margin: 0; color: var(--suave); font-size: var(--t-14); }
-.entrada-card form { display: grid; gap: var(--e-12); }
+.login-caixa { width: 100%; max-width: 400px; display: grid; gap: var(--e-16); }
+.login-marca { display: flex; flex-direction: column; align-items: center; gap: var(--e-8); text-align: center; }
+.login-marca img { width: 88px; height: 88px; border-radius: 50%; }
+.login-marca b { font-family: var(--script); font-weight: 400; font-size: 40px; line-height: 1; }
+.login-marca span { font-size: var(--t-14); color: var(--claro); }
+.login-card { background: var(--cartao); color: var(--texto); border-radius: var(--r-16); padding: var(--e-24) var(--e-16); display: grid; gap: var(--e-12); }
+.login-card h1 { margin: 0; font-size: 22px; }
+.login-card p { margin: 0; color: var(--suave); font-size: var(--t-14); }
+.login-card form { display: grid; gap: var(--e-12); }
 .senha-wrap { position: relative; }
 .senha-wrap input { padding-right: 56px; }
 .ver-senha { position: absolute; right: 2px; top: 2px; bottom: 2px; min-width: 52px; border: 0; background: none; color: var(--texto); font-size: var(--t-12); font-weight: 700; text-decoration: underline; }
-.entrada-links { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--e-8); }
+.login-links { display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--e-8); }
 .ok-msg { margin: 0; color: var(--ok); font-weight: 600; font-size: var(--t-14); }
 .equipe-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-8); }
 .equipe-lista li { display: flex; align-items: center; justify-content: space-between; gap: var(--e-8); padding: var(--e-8) var(--e-8) var(--e-8) var(--e-12); background: var(--papel); border-radius: var(--r-8); }
@@ -869,10 +869,10 @@ form.dlg { padding: var(--e-16); display: grid; gap: var(--e-12); }
 </dialog>
 
 <!-- ================= ENTRADA (versão fora do Claude) ================= -->
-<div class="entrada" id="telaEntrada" hidden>
-  <div class="entrada-caixa">
-    <div class="entrada-marca"><img src="img/logo-bela.png" alt="" width="88" height="88"><b>Bela</b><span>Estoque e vendas</span></div>
-    <div class="entrada-card" id="entradaCard"></div>
+<div class="login" id="telaEntrada" hidden>
+  <div class="login-caixa">
+    <div class="login-marca"><img src="img/logo-bela.png" alt="" width="88" height="88"><b>Bela</b><span>Estoque e vendas</span></div>
+    <div class="login-card" id="entradaCard"></div>
   </div>
 </div>
 
@@ -1928,7 +1928,7 @@ form.dlg { padding: var(--e-16); display: grid; gap: var(--e-12); }
         ${campoSenha("lgSenha", "Senha", "current-password")}
         <p class="erro-msg" id="lgErro" role="alert" hidden></p>
         <button type="submit" class="btn btn-rosa btn-bloco" id="lgBtn">Entrar</button>
-        <div class="entrada-links"><button type="button" class="btn btn-texto" data-modo="criar">Primeiro acesso</button><button type="button" class="btn btn-texto" data-modo="recuperar">Esqueci a senha</button></div>
+        <div class="login-links"><button type="button" class="btn btn-texto" data-modo="criar">Primeiro acesso</button><button type="button" class="btn btn-texto" data-modo="recuperar">Esqueci a senha</button></div>
       </form>`);
     if (modo === "criar") telaEntrada(`<h1>Primeiro acesso</h1><p>Use o e-mail que o dono da loja liberou para você e crie sua senha.</p>
       <form id="formLogin" novalidate>
@@ -1937,14 +1937,14 @@ form.dlg { padding: var(--e-16); display: grid; gap: var(--e-12); }
         ${campoSenha("lgSenha", "Crie uma senha (6 ou mais caracteres)", "new-password")}
         <p class="erro-msg" id="lgErro" role="alert" hidden></p>
         <button type="submit" class="btn btn-rosa btn-bloco" id="lgBtn">Criar senha e entrar</button>
-        <div class="entrada-links"><button type="button" class="btn btn-texto" data-modo="entrar">Já tenho senha</button></div>
+        <div class="login-links"><button type="button" class="btn btn-texto" data-modo="entrar">Já tenho senha</button></div>
       </form>`);
     if (modo === "recuperar") telaEntrada(`<h1>Esqueci a senha</h1><p>Enviamos um link para você criar uma senha nova.</p>
       <form id="formLogin" novalidate>
         <div class="campo"><label for="lgEmail">E-mail</label><input id="lgEmail" type="email" inputmode="email" autocomplete="username" autocapitalize="none" spellcheck="false" required aria-required="true" value="${esc(emailAnt)}"></div>
         <p class="erro-msg" id="lgErro" role="alert" hidden></p>
         <button type="submit" class="btn btn-rosa btn-bloco" id="lgBtn">Enviar link</button>
-        <div class="entrada-links"><button type="button" class="btn btn-texto" data-modo="entrar">Voltar para Entrar</button></div>
+        <div class="login-links"><button type="button" class="btn btn-texto" data-modo="entrar">Voltar para Entrar</button></div>
       </form>`);
     $$("[data-modo]", $("#entradaCard")).forEach((b) => b.addEventListener("click", () => mostrarLogin(b.dataset.modo)));
     $("#formLogin").addEventListener("submit", async (e) => {
