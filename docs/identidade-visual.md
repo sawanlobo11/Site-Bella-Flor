@@ -20,14 +20,15 @@ Tirada da logo e do Instagram da loja. Vale para o site e para o controle de est
 
 Gradiente dourado dos botões: `linear-gradient(135deg, #f8e06a 0%, #e9a816 45%, #c47d06 100%)`.
 
-## Fontes (Google Fonts)
+## Fontes
 
-| Papel | Fonte |
-| --- | --- |
-| Letra cursiva (marca, palavras de destaque) | Playball |
-| Títulos | Playfair Display |
-| Texto | Montserrat |
-| Rótulos pequenos (só no estoque) | IBM Plex Mono |
+| Papel | Site | Estoque e vendas |
+| --- | --- | --- |
+| Letra cursiva (só o nome "Bela") | Playball | Playball |
+| Títulos | Playfair Display | Fonte do sistema, negrito |
+| Texto e números | Montserrat | Fonte do sistema |
+
+**Fonte do sistema** (pedido do dono, no estilo do iPhone): `-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`. No iPhone, iPad e Mac aparece a San Francisco da Apple; no Windows, Segoe UI; no Android, Roboto; nos demais, Arial. Títulos e números grandes em negrito com as letras um pouco mais juntas (`letter-spacing: -0.02em`).
 
 ## Regras
 

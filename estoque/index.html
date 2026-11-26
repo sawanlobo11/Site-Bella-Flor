@@ -2,7 +2,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playball&family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playball&display=swap" rel="stylesheet">
 <style>
 /* Floricultura Bela: estoque, vendas e faturamento.
    Direção (skill UI UX Pro Max, perfil "Inventory & Stock Management"): Flat Design + Minimalismo Suíço,
@@ -34,10 +34,12 @@
   --saida: #2a5a8a;    --saida-fundo: #e6edf5;
   --trilho: #ebe6d6;
   /* Tipografia */
+  /* Fonte do sistema: San Francisco no iPhone, iPad e Mac; Segoe UI no Windows; Roboto no Android; Arial como reserva.
+     A letra cursiva fica só no nome "Bela", ao lado da logo. */
   --script: "Playball", "Brush Script MT", cursive;
-  --serif: "Playfair Display", Georgia, serif;
-  --sans: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif: var(--sans);
+  --mono: var(--sans);
   --t-12: 12px; --t-14: 14px; --t-16: 16px; --t-18: 18px; --t-24: 24px; --t-32: 32px;
   /* Espaço (ritmo de 4/8) */
   --e-4: 4px; --e-8: 8px; --e-12: 12px; --e-16: 16px; --e-24: 24px; --e-32: 32px; --e-48: 48px;
@@ -73,7 +75,9 @@ button, a, label, summary { touch-action: manipulation; -webkit-tap-highlight-co
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
 :focus-visible { outline: 3px solid var(--orquidea); outline-offset: 2px; }
-h1, h2, h3 { text-wrap: balance; }
+h1, h2, h3 { text-wrap: balance; font-weight: 700; letter-spacing: -0.02em; }
+/* Números grandes no estilo dos apps da Apple: negrito, levemente mais juntos e com algarismos alinhados */
+.tile strong, .totais .total strong, .ir-venda strong, .qtd { font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .num { font-variant-numeric: tabular-nums; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .ico { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
@@ -109,7 +113,7 @@ h1, h2, h3 { text-wrap: balance; }
 .vista { animation: surge var(--dur-entra) var(--ease-entra); }
 @keyframes surge { from { opacity: 0; transform: translateY(6px); } }
 .cabeca { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-8) var(--e-16); margin-bottom: var(--e-16); }
-.cabeca h1 { font-family: var(--serif); font-size: var(--t-24); line-height: 1.2; margin: 0; outline: none; }
+.cabeca h1 { font-family: var(--serif); font-size: 26px; line-height: 1.15; margin: 0; outline: none; }
 .cabeca p { margin: 2px 0 0; color: var(--suave); font-size: var(--t-14); }
 .cabeca-acoes { display: flex; gap: var(--e-8); flex-wrap: wrap; }
 .painel { background: var(--cartao); border: 1px solid var(--linha); border-radius: var(--r-12); min-width: 0; }
