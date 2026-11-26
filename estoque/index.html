@@ -202,8 +202,8 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
 .cat-lista li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 6px 6px 12px; background: var(--papel); border-radius: 10px; }
 
 /* Aviso */
-.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 160%); background: var(--noite); color: #fff; border: 1px solid var(--ouro); padding: 10px 18px; border-radius: 999px; font-weight: 600; z-index: 20; transition: transform .4s var(--ease-sai); max-width: calc(100% - 32px); text-align: center; }
-.toast.on { transform: translate(-50%, 0); }
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 24px); opacity: 0; visibility: hidden; background: var(--noite); color: #fff; border: 1px solid var(--ouro); padding: 10px 18px; border-radius: 999px; font-weight: 600; z-index: 30; transition: transform .4s var(--ease-sai), opacity .3s var(--ease-suave), visibility 0s .4s; max-width: calc(100% - 32px); text-align: center; pointer-events: none; }
+.toast.on { transform: translate(-50%, 0); opacity: 1; visibility: visible; transition-delay: 0s; }
 .leitura { background: var(--baixo-fundo); color: var(--baixo); border-radius: 10px; padding: 10px 14px; font-weight: 600; margin-top: 12px; }
 
 
@@ -212,6 +212,11 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
 .abas a { color: var(--claro); text-decoration: none; font-weight: 600; font-size: 13px; padding: 8px 14px; border-radius: 999px; transition: background-color .25s var(--ease-suave), color .25s var(--ease-suave); }
 .abas a:hover { color: #fff; background: rgba(255,255,255,.08); }
 .abas a[aria-current="page"] { background: var(--ouro-grad); color: var(--noite); }
+.abas svg { display: none; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.fechar-gaveta { display: none; }
+.veu { position: fixed; inset: 0; z-index: 19; background: rgba(5, 20, 8, .55); opacity: 0; visibility: hidden; transition: opacity .3s var(--ease-suave), visibility 0s .3s; }
+.veu.on { opacity: 1; visibility: visible; transition-delay: 0s; }
+body.travado { overflow: hidden; }
 .vista[hidden] { display: none !important; }
 .vista { animation: vista .35s var(--ease-sai); }
 @keyframes vista { from { opacity: 0; transform: translateY(6px); } }
@@ -307,9 +312,6 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
   .prod-lista { max-height: 420px; }
 }
 @media (max-width: 700px) {
-  .topo .wrap { flex-wrap: wrap; row-gap: 8px; }
-  .abas { order: 3; width: 100%; margin-left: 0; justify-content: space-between; }
-  .abas a { flex: 1; text-align: center; padding: 8px 6px; }
   .vendas-lista li { grid-template-columns: 48px minmax(0, 1fr) auto; }
   .vendas-lista li .acao { grid-column: 2 / -1; justify-self: end; }
   .prod-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -344,6 +346,84 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
   .tile strong { font-size: 22px; }
   .sinc span { display: none; }
 }
+
+/* ================= Celular: layout de aplicativo ================= */
+@media (max-width: 700px) {
+  body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+  .topo .wrap { padding-block: 8px; }
+  .topo img { width: 38px; height: 38px; }
+  .marca b { font-size: 23px; }
+  /* Abas viram a barra de baixo */
+  .abas { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px;
+    background: var(--noite); border-top: 2px solid var(--ouro);
+    padding: 6px max(10px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px)); }
+  .abas a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 54px; padding: 4px; border-radius: 14px; font-size: 12px; }
+  .abas svg { display: block; }
+  .abas a:hover { background: transparent; }
+  .abas a[aria-current="page"] { background: var(--ouro-grad); }
+
+  /* Textos e campos: 16px evita o zoom automático do iPhone ao tocar num campo */
+  input, select, textarea, .busca input, .cart-ctrl input { font-size: 16px; }
+  .titulo-vista { padding-block: 14px 0; }
+  .titulo-vista p { display: none; }
+
+  /* Estoque */
+  .resumo { gap: 8px; padding-block: 12px 4px; }
+  .tile { padding: 10px 12px; border-radius: 10px; }
+  .tile small { font-size: 10px; }
+  .tile strong { font-size: 20px; }
+  .tile em { font-size: 11px; display: block; line-height: 1.3; }
+  .secoes { flex-wrap: nowrap; gap: 6px; padding-block: 10px 2px; }
+  .secao-btn { flex: 1 1 0; min-width: 0; padding: 10px 12px; border-radius: 12px; }
+  .secao-btn b { font-size: 16px; }
+  .secao-btn div span { display: none; }
+  .secao-btn .cont { min-width: 28px; height: 28px; font-size: 12px; }
+  .corpo { gap: 14px; padding-block: 8px 24px; }
+  .painel-topo { padding: 12px; gap: 10px; }
+  .chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -12px; padding-inline: 12px; scroll-padding-inline: 12px; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex-shrink: 0; white-space: nowrap; }
+  .linha-ctrl { flex-wrap: nowrap; }
+  .busca { flex: 1 1 auto; }
+  /* Novo item vira botão flutuante acima da barra de baixo */
+  #btnNovo { position: fixed; z-index: 11; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    height: 54px; padding: 0 20px; border-radius: 999px; font-size: 15px; box-shadow: 0 14px 30px -10px rgba(11, 42, 16, .55); }
+  .hist ul { max-height: 360px; }
+  #vista-estoque .corpo { padding-bottom: 84px; }
+
+  /* Vendas */
+  .pdv { gap: 14px; padding-block: 10px 14px; }
+  .prod-lista { max-height: none; overflow: visible; padding: 10px; }
+  .prod { padding: 10px; }
+  .ir-venda { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  /* A venda atual vira uma gaveta que sobe de baixo */
+  .carrinho { position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 20; max-height: 88dvh; overflow-y: auto; overscroll-behavior: contain;
+    border-radius: 20px 20px 0 0; border: 0; box-shadow: 0 -20px 50px -20px rgba(0, 0, 0, .45);
+    transform: translateY(105%); visibility: hidden; transition: transform .38s var(--ease-sai), visibility 0s .38s; }
+  .carrinho.aberto { transform: none; visibility: visible; transition-delay: 0s; }
+  .carrinho .painel-topo { position: sticky; top: 0; z-index: 2; background: var(--cartao); flex-direction: row; justify-content: space-between; align-items: center; border-radius: 20px 20px 0 0; }
+  .carrinho .painel-topo::before { content: ""; position: absolute; top: 6px; left: 50%; width: 40px; height: 4px; margin-left: -20px; border-radius: 2px; background: var(--linha); }
+  .fechar-gaveta { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--linha); background: var(--papel); font-size: 20px; line-height: 1; padding: 0; color: var(--texto); }
+  .cart-rodape { position: sticky; bottom: 0; background: var(--cartao); padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .ir-venda.tem { display: flex; }
+
+  /* Faturamento */
+  .titulo-vista h1 { width: 100%; }
+  .periodos { display: flex; width: 100%; }
+  .periodos button { flex: 1; min-height: 44px; }
+  .corpo2 { gap: 14px; padding-block: 14px 24px; }
+  .barras-h li { grid-template-columns: 70px minmax(0, 1fr) auto; }
+
+  /* Janelas sobem de baixo, ocupando a largura toda */
+  dialog { width: 100%; max-width: 100%; margin: auto 0 0; border-radius: 20px 20px 0 0; max-height: 92dvh; }
+  dialog[open] { animation: sobe .36s var(--ease-sai); }
+  @keyframes sobe { from { transform: translateY(40%); opacity: 0; } }
+  .dlg-topo { border-radius: 20px 20px 0 0; }
+
+  /* Aviso aparece no alto, longe dos botões de baixo */
+  .toast { bottom: auto; top: calc(66px + env(safe-area-inset-top, 0px)); transform: translate(-50%, -16px); }
+  .toast.on { transform: translate(-50%, 0); }
+}
 @media (pointer: coarse) {
   .ic { width: 44px; height: 44px; }
   .btn, .toggle, .busca { min-height: 44px; }
@@ -360,9 +440,9 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
     <img src="img/logo-bela.png" alt="">
     <div class="marca"><b>Bela</b><span>Estoque e vendas</span></div>
     <nav class="abas" aria-label="Áreas">
-      <a href="#estoque" data-vista="estoque">Estoque</a>
-      <a href="#vendas" data-vista="vendas">Vendas</a>
-      <a href="#faturamento" data-vista="faturamento">Faturamento</a>
+      <a href="#estoque" data-vista="estoque"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l9-5 9 5v8l-9 5-9-5V8Z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Estoque</a>
+      <a href="#vendas" data-vista="vendas"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l-1.2 13H6.2L5 7Z"/><path d="M9 7V6a3 3 0 0 1 6 0v1"/></svg>Vendas</a>
+      <a href="#faturamento" data-vista="faturamento"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16"/><path d="M7 16v-5M12 16V6M17 16v-8"/></svg>Faturamento</a>
     </nav>
     <div class="sinc" id="sinc"><i></i><span id="sincTxt">Conectando</span></div>
   </div>
@@ -393,7 +473,7 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
       <div class="painel-topo">
         <div class="chips" id="chips"></div>
         <div class="linha-ctrl">
-          <label class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="busca" type="search" placeholder="Buscar item…" aria-label="Buscar item"></label>
+          <label class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="busca" type="search" placeholder="Buscar…" aria-label="Buscar item"></label>
           <label class="toggle"><input type="checkbox" id="soFalta"> Só em falta</label>
           <button class="btn btn-ouro" id="btnNovo" type="button">+ Novo item</button>
         </div>
@@ -425,7 +505,7 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
       <section class="painel" aria-label="Produtos">
         <div class="painel-topo">
           <div class="linha-ctrl">
-            <label class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="vBusca" type="search" placeholder="Buscar produto…" aria-label="Buscar produto"></label>
+            <label class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="vBusca" type="search" placeholder="Buscar…" aria-label="Buscar produto"></label>
             <button class="btn btn-linha" id="btnAvulso" type="button">+ Item avulso</button>
           </div>
         </div>
@@ -434,7 +514,7 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
       </section>
 
       <aside class="painel carrinho" id="carrinho" aria-label="Venda atual">
-        <div class="painel-topo"><h2>Venda atual</h2></div>
+        <div class="painel-topo"><h2>Venda atual</h2><button type="button" class="fechar-gaveta" id="fecharCarrinho" aria-label="Fechar venda atual">×</button></div>
         <ul class="cart-lista" id="vCarrinho"></ul>
         <div class="cart-vazio" id="vCartVazio">Nenhum produto ainda.<br>Toque em um produto da lista ou use “Item avulso” para serviços como entrega e montagem.</div>
         <div class="cart-rodape">
@@ -464,6 +544,7 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
       <ul class="vendas-lista" id="vHoje"></ul>
       <div class="vazio" id="vHojeVazio"><b>Nenhuma venda hoje ainda</b>As vendas finalizadas aparecem aqui.</div>
     </section>
+    <div class="veu" id="veu"></div>
     <button class="ir-venda" id="irVenda" type="button"><span id="irVendaTxt"></span><strong id="irVendaVal"></strong></button>
   </div>
 
@@ -989,6 +1070,7 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
     estado.vista = VISTAS.includes(h) ? h : "estoque";
     VISTAS.forEach((v) => { $("#vista-" + v).hidden = v !== estado.vista; });
     $$(".abas a").forEach((a) => a.setAttribute("aria-current", a.dataset.vista === estado.vista ? "page" : "false"));
+    if (estado.vista !== "vendas") fecharCarrinho();
     if (estado.vista === "vendas") renderPDV();
     if (estado.vista === "faturamento") renderFaturamento();
     renderIrVenda();
@@ -1053,6 +1135,7 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
 
   function renderCarrinho() {
     $("#vCartVazio").hidden = carrinho.length > 0;
+    if (!carrinho.length) fecharCarrinho();
     $("#vCarrinho").innerHTML = carrinho.map((l) => {
       const it = l.itemId ? estado.itens.find((i) => i.id === l.itemId) : null;
       const disp = it ? Number(it.quantidade) || 0 : null;
@@ -1094,7 +1177,23 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
     $("#irVendaTxt").textContent = `${qtd} ${qtd === 1 ? "item" : "itens"} · ver venda`;
     $("#irVendaVal").textContent = brl.format(totaisCarrinho().total);
   }
-  $("#irVenda").addEventListener("click", () => $("#carrinho").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }));
+  const celular = matchMedia("(max-width: 700px)");
+  function abrirCarrinho() {
+    $("#carrinho").classList.add("aberto"); $("#veu").classList.add("on"); document.body.classList.add("travado");
+    $("#fecharCarrinho").focus({ preventScroll: true });
+  }
+  function fecharCarrinho() {
+    if (!$("#carrinho").classList.contains("aberto")) return;
+    $("#carrinho").classList.remove("aberto"); $("#veu").classList.remove("on"); document.body.classList.remove("travado");
+  }
+  $("#irVenda").addEventListener("click", () => {
+    if (celular.matches) return abrirCarrinho();
+    $("#carrinho").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  });
+  $("#fecharCarrinho").addEventListener("click", fecharCarrinho);
+  $("#veu").addEventListener("click", fecharCarrinho);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !document.querySelector("dialog[open]")) fecharCarrinho(); });
+  celular.addEventListener("change", () => { if (!celular.matches) fecharCarrinho(); });
 
   $("#vProdutos").addEventListener("click", (e) => {
     const b = e.target.closest("[data-add]"); if (!b) return;
@@ -1182,6 +1281,7 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
       }
       carrinho = []; $("#vDesconto").value = ""; $("#vCliente").value = ""; $("#vErro").hidden = true;
       toast(`Venda ${codigo} registrada: ${brl.format(t.total)}`);
+      fecharCarrinho();
       renderPDV();
     } catch (err) { erro(erroEscrita(err)); }
     finally { finalizando = false; btn.textContent = "Finalizar venda"; atualizarTotais(); }
@@ -1314,8 +1414,11 @@ details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
       dica.classList.add("on");
     };
     const esconder = () => { wrap.classList.remove("foco"); dica.classList.remove("on"); };
-    svg.addEventListener("pointermove", (e) => { const a = e.target.closest("[data-i]"); if (a) mostrar(Number(a.dataset.i)); });
-    svg.addEventListener("pointerleave", esconder);
+    const aponta = (e) => { const a = e.target.closest("[data-i]"); if (a) mostrar(Number(a.dataset.i)); };
+    svg.addEventListener("pointermove", aponta);
+    svg.addEventListener("pointerdown", aponta);
+    svg.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") esconder(); });
+    document.addEventListener("pointerdown", (e) => { if (!wrap.contains(e.target)) esconder(); });
   }
 
   function renderFaturamento() {

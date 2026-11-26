@@ -6,7 +6,7 @@
  * Como rodar:  node estoque/testes/teste-vendas.js
  * Capturas em estoque/testes/saida/.
  */
-const { chromium } = require('playwright');
+const { chromium, devices } = require('playwright');
 const fs = require('fs');
 const path = require('path');
 const PAGINA = path.join(__dirname, '..', 'index.html');
@@ -23,8 +23,12 @@ const TESTE = path.join(__dirname, '..', '_teste-vendas.html');
   const b = await chromium.launch(); const erros = []; const falhas = [];
   const confere = (cond, msg) => { if (!cond) falhas.push(msg); };
 
-  for (const [n, vp, extra] of [['d', { width: 1280, height: 800 }, {}], ['m', { width: 375, height: 812 }, { hasTouch: true, isMobile: true }]]) {
-    const p = await b.newPage({ viewport: vp, ...extra });
+  const APARELHOS = [['d', { viewport: { width: 1280, height: 800 } }], ['iphone', devices['iPhone 13']], ['android', { ...devices['Galaxy S9+'], viewport: { width: 360, height: 740 } }]];
+  for (const [n, ap] of APARELHOS) {
+    const vp = ap.viewport;
+    const ctx = await b.newContext({ ...ap, deviceScaleFactor: 1 });
+    const p = await ctx.newPage();
+    const toque = async (sel) => (ap.hasTouch ? p.tap(sel) : p.click(sel));
     p.on('pageerror', e => erros.push(n + ': ' + e.message));
     p.on('console', m => m.type() === 'error' && erros.push(n + ': ' + m.text()));
     await p.goto('file://' + TESTE); await p.waitForTimeout(300);
@@ -51,15 +55,19 @@ const TESTE = path.join(__dirname, '..', '_teste-vendas.html');
     await p.evaluate(() => { location.hash = 'vendas'; }); await p.waitForTimeout(300);
 
     // Monta uma venda: 2 rosas + 1 orquídea + item avulso, com desconto
-    await p.click('[data-add="rosa"]'); await p.click('[data-add="rosa"]'); await p.click('[data-add="orq"]');
+    await toque('[data-add="rosa"]'); await toque('[data-add="rosa"]'); await toque('[data-add="orq"]');
     confere(await p.isDisabled('[data-add="adubo"]'), 'produto zerado deveria estar desativado');
-    await p.click('#btnAvulso'); await p.fill('#aNome', 'Taxa de entrega'); await p.fill('#aPreco', '10'); await p.press('#aNome', 'Enter');
+    await toque('#btnAvulso'); await p.fill('#aNome', 'Taxa de entrega'); await p.fill('#aPreco', '10'); await p.press('#aNome', 'Enter');
+    // No celular a venda atual fica numa gaveta: abre pelo botão de baixo
+    if (await p.isVisible('#irVenda')) { await toque('#irVenda'); await p.waitForTimeout(450); confere(await p.isVisible('#btnFinalizar'), n + ': gaveta da venda não abriu'); }
     await p.fill('#vDesconto', '5.9');
-    await p.click('.pagamentos label:has(input[value="credito"])');
+    await toque('.pagamentos label:has(input[value="credito"])');
+    confere(await p.isChecked('input[name="pag"][value="credito"]'), n + ': pagamento não mudou para crédito');
     const total = await p.textContent('#vTotal');
     confere(total.replace(/\s/g, ' ').includes('150,00'), 'total esperado R$ 150,00, veio ' + total);
     if (n === 'd') await p.screenshot({ path: path.join(SAIDA, 'venda-montando.png') });
-    await p.click('#btnFinalizar'); await p.waitForTimeout(400);
+    await toque('#btnFinalizar'); await p.waitForTimeout(500);
+    confere(!(await p.evaluate(() => document.querySelector('#carrinho').classList.contains('aberto'))), n + ': gaveta deveria fechar depois da venda');
 
     const estoque = await p.evaluate(async () => {
       const db = await window.claude.use('db');
@@ -68,15 +76,16 @@ const TESTE = path.join(__dirname, '..', '_teste-vendas.html');
     confere(estoque.rosa === 38 && estoque.orq === 5, 'baixa no estoque errada: ' + JSON.stringify(estoque));
 
     // Tentar vender mais vasos do que há
-    await p.click('[data-add="vaso"]'); await p.click('[data-add="vaso"]'); await p.click('[data-add="vaso"]');
+    await toque('[data-add="vaso"]'); await toque('[data-add="vaso"]'); await toque('[data-add="vaso"]');
+    if (await p.isVisible('#irVenda')) { await toque('#irVenda'); await p.waitForTimeout(450); }
     const vasoQtd = await p.inputValue('#vCarrinho input[data-campo="qtd"]');
     confere(vasoQtd === '2', 'deveria travar em 2 vasos, ficou ' + vasoQtd);
-    await p.click('[data-rm]');
+    await toque('[data-rm]'); await p.waitForTimeout(450);
 
     // Cancelar a venda de hoje devolve ao estoque
     const cancelar = await p.$('#vHoje [data-cancelar]:not([data-cancelar^="ex"])');
     if (cancelar) {
-      await cancelar.click(); await p.click('#btnCancelarVenda'); await p.waitForTimeout(400);
+      await cancelar.scrollIntoViewIfNeeded(); if (ap.hasTouch) await cancelar.tap(); else await cancelar.click(); await toque('#btnCancelarVenda'); await p.waitForTimeout(400);
       const r = await p.evaluate(async () => (await (await window.claude.use('db')).doc('itens/rosa').get()).data().quantidade);
       confere(r === 40, 'cancelamento deveria devolver as rosas, ficou ' + r);
     } else falhas.push('venda de hoje não apareceu na lista');
@@ -84,17 +93,25 @@ const TESTE = path.join(__dirname, '..', '_teste-vendas.html');
 
     // Faturamento: mês, com o gráfico
     await p.evaluate(() => { location.hash = 'faturamento'; }); await p.waitForTimeout(300);
-    await p.click('.periodos [data-periodo="mes"]'); await p.waitForTimeout(300);
+    await toque('.periodos [data-periodo="mes"]'); await p.waitForTimeout(300);
     const barras = await p.$$eval('#fGraf .barra', (els) => els.length);
     confere(barras > 0, 'gráfico do mês sem barras');
     const alvo = await p.$('#fGraf .alvo');
-    if (alvo && n === 'd') { const bb = await alvo.boundingBox(); await p.mouse.move(bb.x + bb.width / 2, bb.y + bb.height - 4); }
-    await p.waitForTimeout(250);
+    // Dica do gráfico: passar o mouse no computador, tocar no celular
+    const alvos = await p.$$('#fGraf .alvo'); const ult = alvos[alvos.length - 1];
+    if (ult) {
+      await ult.evaluate((e) => e.scrollIntoView({ block: 'center' })); await p.waitForTimeout(150); const bb = await ult.boundingBox();
+      const emCima = await p.evaluate(([x, y]) => { const el = document.elementFromPoint(x, y); return el ? el.tagName + '.' + el.getAttribute('class') : ''; }, [bb.x + bb.width / 2, bb.y + bb.height - 4]);
+      confere(emCima.includes('alvo'), n + ': ponto do toque cai em ' + emCima);
+      if (ap.hasTouch) await p.touchscreen.tap(bb.x + bb.width / 2, bb.y + bb.height - 4); else await p.mouse.move(bb.x + bb.width / 2, bb.y + bb.height - 4);
+      await p.waitForTimeout(250);
+      confere(await p.evaluate(() => document.querySelector('#fDica').classList.contains('on')), n + ': dica do gráfico não apareceu');
+    }
     await p.screenshot({ path: path.join(SAIDA, `faturamento-${n}.png`), fullPage: true });
     const largura = await p.evaluate(() => document.documentElement.scrollWidth);
     confere(largura <= vp.width, `${n}: página mais larga que a tela (${largura}px)`);
     console.log(n, 'largura', largura, 'barras', barras);
-    await p.close();
+    await ctx.close();
   }
   await b.close(); fs.unlinkSync(TESTE);
   console.log('erros', erros);
