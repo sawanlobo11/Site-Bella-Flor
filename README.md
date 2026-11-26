@@ -11,7 +11,7 @@ Sistemas da **Floricultura Bela**, floricultura e paisagismo em Teixeira de Frei
 | Pasta | O que é |
 | --- | --- |
 | [`site/`](site/) | Site da loja: banners, catálogo de produtos, sacola e pedido pelo WhatsApp. |
-| [`estoque/`](estoque/) | Controle de estoque interno, separado em produtos físicos e orgânicos. |
+| [`estoque/`](estoque/) | Sistema interno: estoque (físicos e orgânicos), vendas com baixa automática e faturamento por dia, semana e mês. |
 | [`docs/`](docs/) | Identidade visual (cores, fontes, logo) e créditos das fotos. |
 | `.claude/skills/` | Skill de design `site-de-10k`, usada pelo Claude ao trabalhar neste projeto. |
 
@@ -27,7 +27,7 @@ Sistemas da **Floricultura Bela**, floricultura e paisagismo em Teixeira de Frei
 ├── estoque/
 │   ├── index.html             ← o sistema inteiro em um arquivo
 │   ├── img/logo-bela.png
-│   └── testes/teste-local.js  ← teste com banco falso
+│   └── testes/                ← testes com banco falso (estoque e vendas)
 ├── docs/
 │   ├── identidade-visual.md
 │   └── creditos-das-fotos.md
@@ -39,7 +39,7 @@ Sistemas da **Floricultura Bela**, floricultura e paisagismo em Teixeira de Frei
 ## Onde ficam os dados
 
 - **Site:** não guarda dados. Os produtos ficam no arquivo `site/assets/js/produtos.js` e o pedido vai direto para o WhatsApp da loja.
-- **Estoque:** os itens, categorias e movimentações ficam no banco de dados do Claude, ligado ao link do sistema no claude.ai. O código está aqui no GitHub; os dados não. Detalhes em [`estoque/README.md`](estoque/README.md).
+- **Estoque e vendas:** itens, categorias, movimentações e vendas ficam no banco de dados do Claude, ligado ao link do sistema no claude.ai. O código está aqui no GitHub; os dados não. Detalhes em [`estoque/README.md`](estoque/README.md).
 
 ## Como pedir mudanças
 

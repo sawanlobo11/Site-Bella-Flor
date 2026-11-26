@@ -17,6 +17,7 @@ const mock = `
 window.claude = { use: async (n) => {
   if (n === 'user') return { id: async () => 'u_teste', can: async () => true, profiles: async (ids) => Object.fromEntries([].concat(ids).map(i => [i, {name: 'Você'}])) };
   if (n !== 'db') return null;
+  if (window.__dbFalso) return window.__dbFalso;
   const store = {}; const subs = [];
   const notify = () => subs.forEach(f => f());
   const snapDoc = (p) => ({ id: p.split('/').pop(), exists: p in store, data: () => store[p], metadata: {fromCache:false} });
@@ -34,7 +35,7 @@ window.claude = { use: async (n) => {
       if (ord) docs.sort((a, b) => (a.data()[ord[0]] > b.data()[ord[0]] ? 1 : -1) * (ord[1] === 'desc' ? -1 : 1));
       if (lim) docs = docs.slice(0, lim); fn({ docs, size: docs.length, empty: !docs.length, metadata: {fromCache:false} }); };
       subs.push(f); setTimeout(f, 50); return () => {}; } });
-  return { doc: docRef, collection: (c) => coll(c) };
+  return (window.__dbFalso = { doc: docRef, collection: (c) => coll(c) });
 }};`;
 (async () => {
   let html = fs.readFileSync(PAGINA, 'utf8');

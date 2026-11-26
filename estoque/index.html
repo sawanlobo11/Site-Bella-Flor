@@ -206,6 +206,117 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
 .toast.on { transform: translate(-50%, 0); }
 .leitura { background: var(--baixo-fundo); color: var(--baixo); border-radius: 10px; padding: 10px 14px; font-weight: 600; margin-top: 12px; }
 
+
+/* Abas principais no topo */
+.abas { display: flex; gap: 4px; margin-left: 24px; }
+.abas a { color: var(--claro); text-decoration: none; font-weight: 600; font-size: 13px; padding: 8px 14px; border-radius: 999px; transition: background-color .25s var(--ease-suave), color .25s var(--ease-suave); }
+.abas a:hover { color: #fff; background: rgba(255,255,255,.08); }
+.abas a[aria-current="page"] { background: var(--ouro-grad); color: var(--noite); }
+.vista[hidden] { display: none !important; }
+.vista { animation: vista .35s var(--ease-sai); }
+@keyframes vista { from { opacity: 0; transform: translateY(6px); } }
+.titulo-vista { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 20px 4px; }
+.titulo-vista h1 { font-family: var(--serif); font-size: 26px; margin: 0; }
+.titulo-vista p { margin: 0; color: var(--suave); }
+
+/* Nova venda */
+.pdv { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 380px); gap: 20px; padding-block: 12px 20px; align-items: start; }
+.prod-lista { list-style: none; margin: 0; padding: 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; max-height: 520px; overflow-y: auto; }
+.prod { width: 100%; text-align: left; border: 1px solid var(--linha); background: var(--papel); border-radius: 12px; padding: 10px 12px; display: grid; gap: 2px; transition: border-color .2s var(--ease-suave), transform .2s var(--ease-sai), background-color .2s var(--ease-suave); }
+.prod:hover:not(:disabled) { border-color: var(--folha); background: var(--cartao); transform: translateY(-2px); }
+.prod:disabled { opacity: .5; cursor: not-allowed; }
+.prod b { font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.prod .pp { font-family: var(--serif); font-weight: 700; font-size: 16px; }
+.prod .pe { font-family: var(--mono); font-size: 11px; color: var(--suave); }
+.prod.no-carrinho { border-color: var(--orquidea); box-shadow: inset 0 0 0 1px var(--orquidea); }
+.carrinho { position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); }
+.carrinho h2, .painel h2 { font-family: var(--serif); font-size: 18px; margin: 0; }
+.cart-lista { list-style: none; margin: 0; padding: 4px 16px; display: grid; }
+.cart-lista li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; padding: 10px 0; border-bottom: 1px solid var(--linha); }
+.cart-lista li:last-child { border-bottom: 0; }
+.cart-nome { font-weight: 700; overflow-wrap: anywhere; }
+.cart-sub { font-family: var(--serif); font-weight: 700; text-align: right; white-space: nowrap; }
+.cart-ctrl { grid-column: 1 / -1; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; color: var(--suave); }
+.cart-ctrl input { width: 74px; height: 32px; border: 1px solid var(--linha); border-radius: 8px; padding: 0 8px; background: var(--papel); }
+.cart-ctrl .ic { width: 32px; height: 32px; font-size: 15px; }
+.cart-ctrl .rm { margin-left: auto; border: 0; background: none; color: var(--suave); text-decoration: underline; font-size: 12px; }
+.cart-rodape { padding: 14px 16px 16px; border-top: 1px solid var(--linha); display: grid; gap: 12px; }
+.pagamentos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.pagamentos label { border: 1px solid var(--linha); border-radius: 10px; padding: 8px 2px; text-align: center; font-weight: 700; font-size: 12px; cursor: pointer; background: var(--papel); transition: background-color .2s var(--ease-suave), color .2s var(--ease-suave); }
+.pagamentos input { position: absolute; opacity: 0; pointer-events: none; }
+.pagamentos label:has(input:checked) { background: var(--noite); border-color: var(--noite); color: #fff; }
+.pagamentos label:has(input:focus-visible) { outline: 3px solid var(--orquidea); }
+.linha2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.totais { display: grid; gap: 4px; font-size: 13px; }
+.totais div { display: flex; justify-content: space-between; }
+.totais .total { font-size: 16px; font-weight: 700; padding-top: 6px; border-top: 1px dashed var(--linha); }
+.totais .total strong { font-family: var(--serif); font-size: 26px; }
+.btn-bloco { width: 100%; justify-content: center; height: 48px; font-size: 15px; }
+.cart-vazio { padding: 28px 16px; text-align: center; color: var(--suave); }
+.ir-venda { position: fixed; left: max(16px, env(safe-area-inset-left, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 8; display: none; justify-content: space-between; align-items: center; height: 52px; padding: 0 18px; border: 0; border-radius: 14px; background: var(--noite); color: #fff; font-weight: 700; box-shadow: 0 14px 30px -12px rgba(0,0,0,.5); }
+.ir-venda strong { font-family: var(--serif); font-size: 18px; color: var(--ouro-claro); }
+
+/* Lista de vendas */
+.vendas-lista { list-style: none; margin: 0; padding: 0; }
+.vendas-lista li { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--linha); }
+.vendas-lista li:last-child { border-bottom: 0; }
+.vendas-lista .hora { font-family: var(--mono); font-size: 12px; color: var(--suave); }
+.vendas-lista .itens { overflow-wrap: anywhere; }
+.vendas-lista .itens small { display: block; color: var(--suave); font-size: 12px; }
+.vendas-lista .val { font-family: var(--serif); font-weight: 700; font-size: 17px; white-space: nowrap; }
+.vendas-lista li.cancelada .val, .vendas-lista li.cancelada .itens > span { text-decoration: line-through; color: var(--suave); }
+.tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--papel); border: 1px solid var(--linha); margin-right: 4px; }
+.tag.cancel { background: var(--zerado-fundo); color: var(--zerado); border-color: transparent; }
+
+/* Faturamento */
+.periodos { display: inline-flex; gap: 4px; padding: 4px; background: var(--cartao); border: 1px solid var(--linha); border-radius: 999px; }
+.periodos button { border: 0; background: none; padding: 8px 16px; border-radius: 999px; font-weight: 700; font-size: 13px; color: var(--texto); transition: background-color .25s var(--ease-suave), color .25s var(--ease-suave); }
+.periodos button[aria-selected="true"] { background: var(--noite); color: #fff; }
+.delta { font-size: 12px; font-weight: 600; color: var(--suave); }
+.delta.sobe { color: var(--ok); }
+.delta.desce { color: var(--zerado); }
+.grafico-wrap { position: relative; padding: 8px 16px 16px; }
+.grafico-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+.grafico-wrap .eixo { font-family: var(--mono); font-size: 10px; fill: var(--suave); }
+.grafico-wrap .grade { stroke: var(--linha); stroke-width: 1; }
+.grafico-wrap .barra { fill: #3f7a22; transition: opacity .2s var(--ease-suave); }
+.grafico-wrap .barra.atual { fill: var(--noite); }
+.grafico-wrap .alvo { fill: transparent; cursor: default; }
+.grafico-wrap.foco .barra { opacity: .45; }
+.grafico-wrap.foco .barra.ativa { opacity: 1; }
+.dica-graf { position: absolute; pointer-events: none; background: var(--noite); color: #fff; border-radius: 10px; padding: 8px 10px; font-size: 12px; line-height: 1.35; white-space: nowrap; transform: translate(-50%, calc(-100% - 10px)); opacity: 0; transition: opacity .15s var(--ease-suave); z-index: 2; }
+.dica-graf.on { opacity: 1; }
+.dica-graf b { font-family: var(--serif); font-size: 15px; color: var(--ouro-claro); display: block; }
+.graf-vazio { padding: 40px 16px; text-align: center; color: var(--suave); }
+details.tabela-graf { padding: 0 16px 14px; font-size: 13px; }
+details.tabela-graf summary { cursor: pointer; color: var(--suave); font-weight: 600; }
+details.tabela-graf table td, details.tabela-graf table th { padding: 6px 8px; }
+.corpo2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; padding-block: 20px 40px; }
+.barras-h { list-style: none; margin: 0; padding: 12px 16px 16px; display: grid; gap: 12px; }
+.barras-h li { display: grid; grid-template-columns: 90px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 13px; }
+.barras-h .trilho { height: 10px; border-radius: 5px; background: var(--medidor-trilho); overflow: hidden; }
+.barras-h .trilho b { display: block; height: 100%; border-radius: 0 4px 4px 0; background: #3f7a22; transform-origin: left center; transition: transform .6s var(--ease-sai); }
+.barras-h .v { font-weight: 700; white-space: nowrap; text-align: right; }
+.barras-h .v small { display: block; font-weight: 500; color: var(--suave); font-size: 11px; }
+.top-tab td:first-child { font-weight: 600; }
+@media (max-width: 1000px) {
+  .pdv { grid-template-columns: minmax(0, 1fr); }
+  .carrinho { position: static; }
+  .ir-venda.tem { display: flex; }
+  .corpo2 { grid-template-columns: minmax(0, 1fr); }
+  .prod-lista { max-height: 420px; }
+}
+@media (max-width: 700px) {
+  .topo .wrap { flex-wrap: wrap; row-gap: 8px; }
+  .abas { order: 3; width: 100%; margin-left: 0; justify-content: space-between; }
+  .abas a { flex: 1; text-align: center; padding: 8px 6px; }
+  .vendas-lista li { grid-template-columns: 48px minmax(0, 1fr) auto; }
+  .vendas-lista li .acao { grid-column: 2 / -1; justify-self: end; }
+  .prod-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pagamentos label { font-size: 11px; }
+  .titulo-vista h1 { font-size: 22px; }
+}
+
 @media (max-width: 1000px) {
   .corpo { grid-template-columns: minmax(0, 1fr); }
   .resumo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -243,11 +354,16 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
 }
 </style>
 
-<a class="pular" href="#main">Pular para o estoque</a>
+<a class="pular" href="#main">Pular para o conteúdo</a>
 <header class="topo">
   <div class="wrap">
     <img src="img/logo-bela.png" alt="">
-    <div class="marca"><b>Bela</b><span>Controle de estoque</span></div>
+    <div class="marca"><b>Bela</b><span>Estoque e vendas</span></div>
+    <nav class="abas" aria-label="Áreas">
+      <a href="#estoque" data-vista="estoque">Estoque</a>
+      <a href="#vendas" data-vista="vendas">Vendas</a>
+      <a href="#faturamento" data-vista="faturamento">Faturamento</a>
+    </nav>
     <div class="sinc" id="sinc"><i></i><span id="sincTxt">Conectando</span></div>
   </div>
 </header>
@@ -255,6 +371,7 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
 <main class="wrap" id="main" tabindex="-1">
   <div id="avisoLeitura" class="leitura" hidden>Você está vendo o estoque no modo leitura. Peça a quem administra para te dar acesso de edição.</div>
 
+  <div class="vista" id="vista-estoque">
   <section class="resumo" aria-label="Resumo do estoque">
     <div class="tile"><small>Itens cadastrados</small><strong class="num" id="rTotal">…</strong><em id="rTotalSub">físicos e orgânicos</em></div>
     <div class="tile alerta"><small>Zerados</small><strong class="num" id="rZerado">…</strong><em>precisam de reposição</em></div>
@@ -298,6 +415,90 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
       <ul id="historico"></ul>
       <div class="vazio" id="histVazio"><b>Nada ainda</b>Entradas, vendas e perdas aparecem aqui.</div>
     </aside>
+  </div>
+  </div>
+
+  <!-- VENDAS -->
+  <div class="vista" id="vista-vendas" hidden>
+    <div class="titulo-vista"><h1>Nova venda</h1><p>Toque nos produtos para montar a venda. O estoque é descontado ao finalizar.</p></div>
+    <div class="pdv">
+      <section class="painel" aria-label="Produtos">
+        <div class="painel-topo">
+          <div class="linha-ctrl">
+            <label class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="vBusca" type="search" placeholder="Buscar produto…" aria-label="Buscar produto"></label>
+            <button class="btn btn-linha" id="btnAvulso" type="button">+ Item avulso</button>
+          </div>
+        </div>
+        <ul class="prod-lista" id="vProdutos"></ul>
+        <div class="vazio" id="vProdVazio" hidden></div>
+      </section>
+
+      <aside class="painel carrinho" id="carrinho" aria-label="Venda atual">
+        <div class="painel-topo"><h2>Venda atual</h2></div>
+        <ul class="cart-lista" id="vCarrinho"></ul>
+        <div class="cart-vazio" id="vCartVazio">Nenhum produto ainda.<br>Toque em um produto da lista ou use “Item avulso” para serviços como entrega e montagem.</div>
+        <div class="cart-rodape">
+          <div class="pagamentos" role="radiogroup" aria-label="Forma de pagamento">
+            <label><input type="radio" name="pag" value="pix" checked><span>Pix</span></label>
+            <label><input type="radio" name="pag" value="dinheiro"><span>Dinheiro</span></label>
+            <label><input type="radio" name="pag" value="debito"><span>Débito</span></label>
+            <label><input type="radio" name="pag" value="credito"><span>Crédito</span></label>
+          </div>
+          <div class="linha2">
+            <div class="campo"><label for="vDesconto">Desconto (R$)</label><input id="vDesconto" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div>
+            <div class="campo"><label for="vCliente">Cliente (opcional)</label><input id="vCliente" maxlength="60" placeholder="Nome"></div>
+          </div>
+          <div class="totais num">
+            <div><span>Subtotal</span><span id="vSubtotal">R$ 0,00</span></div>
+            <div id="vDescLinha" hidden><span>Desconto</span><span id="vDescVal"></span></div>
+            <div class="total"><span>Total</span><strong id="vTotal">R$ 0,00</strong></div>
+          </div>
+          <p class="erro-msg" id="vErro" hidden></p>
+          <button class="btn btn-rosa btn-bloco" id="btnFinalizar" type="button" disabled>Finalizar venda</button>
+        </div>
+      </aside>
+    </div>
+
+    <section class="painel" aria-label="Vendas de hoje" style="margin-bottom:40px">
+      <div class="painel-topo" style="flex-direction:row;justify-content:space-between;align-items:center"><h2>Vendas de hoje</h2><span class="num" id="vHojeTotal"></span></div>
+      <ul class="vendas-lista" id="vHoje"></ul>
+      <div class="vazio" id="vHojeVazio"><b>Nenhuma venda hoje ainda</b>As vendas finalizadas aparecem aqui.</div>
+    </section>
+    <button class="ir-venda" id="irVenda" type="button"><span id="irVendaTxt"></span><strong id="irVendaVal"></strong></button>
+  </div>
+
+  <!-- FATURAMENTO -->
+  <div class="vista" id="vista-faturamento" hidden>
+    <div class="titulo-vista">
+      <h1 id="fTitulo">Faturamento</h1>
+      <div class="periodos" role="tablist" aria-label="Período">
+        <button role="tab" data-periodo="dia" aria-selected="true">Hoje</button>
+        <button role="tab" data-periodo="semana" aria-selected="false">Semana</button>
+        <button role="tab" data-periodo="mes" aria-selected="false">Mês</button>
+      </div>
+    </div>
+    <section class="resumo" aria-label="Resumo do período">
+      <div class="tile"><small>Faturamento</small><strong class="num" id="fFat">…</strong><em class="delta" id="fFatDelta"></em></div>
+      <div class="tile"><small>Vendas</small><strong class="num" id="fatQtd">…</strong><em class="delta" id="fatQtdDelta"></em></div>
+      <div class="tile"><small>Ticket médio</small><strong class="num" id="fTicket">…</strong><em>valor médio por venda</em></div>
+      <div class="tile"><small>Lucro estimado</small><strong class="num" id="fLucro">…</strong><em id="fLucroSub">faturamento menos o custo dos itens</em></div>
+    </section>
+    <section class="painel" aria-label="Gráfico de faturamento" style="margin-top:12px">
+      <div class="painel-topo" style="flex-direction:row;justify-content:space-between;align-items:center"><h2 id="fGrafTit">Faturamento por hora</h2></div>
+      <div class="grafico-wrap" id="fGraf"><div class="dica-graf" id="fDica" role="status"></div></div>
+      <details class="tabela-graf"><summary>Ver em tabela</summary><div class="tabela-wrap"><table><thead><tr><th id="fTabCol">Hora</th><th class="dir">Vendas</th><th class="dir">Faturamento</th></tr></thead><tbody id="fTab"></tbody></table></div></details>
+    </section>
+    <div class="corpo2">
+      <section class="painel" aria-label="Por forma de pagamento">
+        <div class="painel-topo"><h2>Por forma de pagamento</h2></div>
+        <ul class="barras-h" id="fPag"></ul>
+      </section>
+      <section class="painel" aria-label="Mais vendidos">
+        <div class="painel-topo"><h2>Mais vendidos</h2></div>
+        <div class="tabela-wrap"><table class="top-tab"><thead><tr><th>Produto</th><th class="dir">Qtd.</th><th class="dir">Faturamento</th></tr></thead><tbody id="fTop"></tbody></table></div>
+        <div class="vazio" id="fTopVazio" hidden><b>Sem vendas no período</b></div>
+      </section>
+    </div>
   </div>
 </main>
 
@@ -378,6 +579,36 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
   </form>
 </dialog>
 
+<!-- Item avulso -->
+<dialog id="dlgAvulso" aria-labelledby="dlgAvTit">
+  <div class="dlg-topo"><h3 id="dlgAvTit">Item avulso</h3><button type="button" data-fechar aria-label="Fechar">×</button></div>
+  <form class="dlg" id="formAvulso">
+    <p class="item-sub" style="margin:0">Para serviços e itens fora do estoque, como entrega, montagem de arranjo ou paisagismo. Não mexe no estoque.</p>
+    <div class="campos">
+      <div class="campo cheio"><label for="aNome">Descrição</label><input id="aNome" required maxlength="80" placeholder="Ex.: Taxa de entrega"></div>
+      <div class="campo"><label for="aPreco">Valor (R$)</label><input id="aPreco" type="number" min="0" step="0.01" inputmode="decimal" required></div>
+      <div class="campo"><label for="aQtd">Quantidade</label><input id="aQtd" type="number" min="1" step="any" inputmode="decimal" value="1" required></div>
+    </div>
+    <div class="dlg-rodape">
+      <button type="button" class="btn btn-linha" data-fechar>Cancelar</button>
+      <button type="submit" class="btn btn-rosa">Adicionar</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Cancelar venda -->
+<dialog id="dlgCancelar" aria-labelledby="dlgCanTit">
+  <div class="dlg-topo"><h3 id="dlgCanTit">Cancelar venda?</h3><button type="button" data-fechar aria-label="Fechar">×</button></div>
+  <form class="dlg" id="formCancelar">
+    <p id="canTxt"></p>
+    <p class="erro-msg" id="canErro" hidden></p>
+    <div class="dlg-rodape">
+      <button type="button" class="btn btn-linha" data-fechar>Voltar</button>
+      <button type="submit" class="btn btn-perigo" id="btnCancelarVenda">Cancelar venda</button>
+    </div>
+  </form>
+</dialog>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -395,7 +626,8 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
 
   const estado = {
     secao: "fisicos", categoria: "todas", busca: "", soFalta: false,
-    itens: [], movs: [], categorias: { fisicos: [], organicos: [] },
+    itens: [], movs: [], vendas: [], categorias: { fisicos: [], organicos: [] },
+    vista: "estoque", periodo: "dia", vBusca: "",
     carregado: false, podeEscrever: true,
   };
   let db = null, user = null, meuId = null;
@@ -749,16 +981,394 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
     catch (err) { const el = $("#catErro"); el.textContent = erroEscrita(err); el.hidden = false; }
   });
 
+
+  /* ================= Navegação entre áreas ================= */
+  const VISTAS = ["estoque", "vendas", "faturamento"];
+  function mostrarVista() {
+    const h = location.hash.replace("#", "");
+    estado.vista = VISTAS.includes(h) ? h : "estoque";
+    VISTAS.forEach((v) => { $("#vista-" + v).hidden = v !== estado.vista; });
+    $$(".abas a").forEach((a) => a.setAttribute("aria-current", a.dataset.vista === estado.vista ? "page" : "false"));
+    if (estado.vista === "vendas") renderPDV();
+    if (estado.vista === "faturamento") renderFaturamento();
+    renderIrVenda();
+  }
+  window.addEventListener("hashchange", () => { mostrarVista(); window.scrollTo(0, 0); });
+
+  /* ================= Datas ================= */
+  const PAG = { pix: "Pix", dinheiro: "Dinheiro", debito: "Débito", credito: "Crédito" };
+  const DIAS_SEM = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+  const inicioDia = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+  const inicioSemana = (d) => { const x = inicioDia(d); const dow = (x.getDay() + 6) % 7; x.setDate(x.getDate() - dow); return x; }; // segunda-feira
+  const inicioMes = (d) => { const x = inicioDia(d); x.setDate(1); return x; };
+  const somaDias = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  function intervalo(periodo, ref = new Date()) {
+    if (periodo === "dia") { const a = inicioDia(ref); return [a, somaDias(a, 1)]; }
+    if (periodo === "semana") { const a = inicioSemana(ref); return [a, somaDias(a, 7)]; }
+    const a = inicioMes(ref); const b = new Date(a); b.setMonth(b.getMonth() + 1); return [a, b];
+  }
+  function intervaloAnterior(periodo) {
+    const [a] = intervalo(periodo);
+    if (periodo === "dia") return intervalo("dia", somaDias(a, -1));
+    if (periodo === "semana") return intervalo("semana", somaDias(a, -7));
+    const r = new Date(a); r.setMonth(r.getMonth() - 1); return intervalo("mes", r);
+  }
+  const hhmm = (iso) => new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  const codigoVenda = (id) => "#" + String(id).slice(-4).toUpperCase();
+  const vendasEntre = (a, b, incluirCanceladas = false) =>
+    estado.vendas.filter((v) => { const t = new Date(v.em); return t >= a && t < b && (incluirCanceladas || !v.cancelada); });
+
+  /* ================= Nova venda ================= */
+  let carrinho = [];
+  const precoDe = (i) => (num(i.preco) !== null ? Number(i.preco) : null);
+
+  function renderPDV() {
+    const termo = norm(estado.vBusca.trim());
+    const noCarrinho = new Set(carrinho.filter((l) => l.itemId).map((l) => l.itemId));
+    const lista = estado.itens
+      .filter((i) => !termo || norm(`${i.nome} ${i.categoria}`).includes(termo))
+      .sort((a, b) => (Number(b.quantidade) > 0) - (Number(a.quantidade) > 0) || String(a.nome).localeCompare(String(b.nome), "pt-BR"));
+    const vazio = $("#vProdVazio");
+    if (!estado.carregado) { vazio.hidden = false; vazio.innerHTML = "<b>Carregando produtos…</b>"; }
+    else if (!estado.itens.length) { vazio.hidden = false; vazio.innerHTML = "<b>Nenhum produto no estoque</b>Cadastre os itens na aba Estoque. Para serviços, use “Item avulso”."; }
+    else if (!lista.length) { vazio.hidden = false; vazio.innerHTML = "<b>Nada encontrado</b>Tente outra busca."; }
+    else vazio.hidden = true;
+    $("#vProdutos").innerHTML = lista.map((i) => {
+      const q = Number(i.quantidade) || 0, pr = precoDe(i);
+      return `<li><button type="button" class="prod${noCarrinho.has(i.id) ? " no-carrinho" : ""}" data-add="${esc(i.id)}" ${q <= 0 || !estado.podeEscrever ? "disabled" : ""}>
+        <b>${esc(i.nome)}</b>
+        <span class="pp num">${pr !== null ? brl.format(pr) : "sem preço"}</span>
+        <span class="pe num">${q <= 0 ? "zerado" : `estoque: ${esc(nf.format(q))} ${esc(i.unidade || "un")}`}</span>
+      </button></li>`;
+    }).join("");
+    renderCarrinho();
+    renderVendasHoje();
+  }
+
+  function totaisCarrinho() {
+    const subtotal = carrinho.reduce((s, l) => s + (Number(l.preco) || 0) * (Number(l.qtd) || 0), 0);
+    const desconto = Math.min(Math.max(0, num($("#vDesconto").value) ?? 0), subtotal);
+    return { subtotal, desconto, total: Math.round((subtotal - desconto) * 100) / 100 };
+  }
+
+  function renderCarrinho() {
+    $("#vCartVazio").hidden = carrinho.length > 0;
+    $("#vCarrinho").innerHTML = carrinho.map((l) => {
+      const it = l.itemId ? estado.itens.find((i) => i.id === l.itemId) : null;
+      const disp = it ? Number(it.quantidade) || 0 : null;
+      return `<li data-key="${esc(l.key)}">
+        <span class="cart-nome">${esc(l.nome)}${l.itemId ? "" : ' <span class="tag">avulso</span>'}</span>
+        <span class="cart-sub num">${brl.format((Number(l.preco) || 0) * (Number(l.qtd) || 0))}</span>
+        <div class="cart-ctrl">
+          <button type="button" class="ic menos" data-cq="-1" aria-label="Tirar um">−</button>
+          <input type="number" min="0" step="any" inputmode="decimal" value="${esc(l.qtd)}" data-campo="qtd" aria-label="Quantidade de ${esc(l.nome)}">
+          <button type="button" class="ic mais" data-cq="1" aria-label="Pôr mais um">+</button>
+          <span>${esc(l.unidade)} × R$</span>
+          <input type="number" min="0" step="0.01" inputmode="decimal" value="${l.preco ?? ""}" placeholder="0,00" data-campo="preco" aria-label="Preço de ${esc(l.nome)}">
+          ${disp !== null ? `<span class="num">(tem ${esc(nf.format(disp))})</span>` : ""}
+          <button type="button" class="rm" data-rm>Remover</button>
+        </div>
+      </li>`;
+    }).join("");
+    atualizarTotais();
+  }
+
+  function atualizarTotais() {
+    const t = totaisCarrinho();
+    $("#vSubtotal").textContent = brl.format(t.subtotal);
+    $("#vDescLinha").hidden = !t.desconto;
+    $("#vDescVal").textContent = "− " + brl.format(t.desconto);
+    $("#vTotal").textContent = brl.format(t.total);
+    $("#btnFinalizar").disabled = !carrinho.length || !estado.podeEscrever;
+    $$("#vCarrinho li").forEach((li) => {
+      const l = carrinho.find((x) => x.key === li.dataset.key);
+      if (l) $(".cart-sub", li).textContent = brl.format((Number(l.preco) || 0) * (Number(l.qtd) || 0));
+    });
+    renderIrVenda();
+  }
+
+  function renderIrVenda() {
+    const b = $("#irVenda");
+    const qtd = carrinho.length;
+    b.classList.toggle("tem", estado.vista === "vendas" && qtd > 0);
+    $("#irVendaTxt").textContent = `${qtd} ${qtd === 1 ? "item" : "itens"} · ver venda`;
+    $("#irVendaVal").textContent = brl.format(totaisCarrinho().total);
+  }
+  $("#irVenda").addEventListener("click", () => $("#carrinho").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }));
+
+  $("#vProdutos").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-add]"); if (!b) return;
+    const it = estado.itens.find((i) => i.id === b.dataset.add); if (!it) return;
+    const linha = carrinho.find((l) => l.itemId === it.id);
+    const disp = Number(it.quantidade) || 0;
+    if (linha) {
+      if (linha.qtd + 1 > disp) { toast(`Só há ${nf.format(disp)} ${it.unidade || "un"} de ${it.nome}`); return; }
+      linha.qtd += 1;
+    } else {
+      carrinho.push({ key: "i" + it.id, itemId: it.id, nome: it.nome, unidade: it.unidade || "un", qtd: 1, preco: precoDe(it), custo: num(it.custo) });
+    }
+    $("#vErro").hidden = true;
+    renderPDV();
+  });
+  let tVB;
+  $("#vBusca").addEventListener("input", (e) => { clearTimeout(tVB); tVB = setTimeout(() => { estado.vBusca = e.target.value; renderPDV(); }, 120); });
+
+  $("#vCarrinho").addEventListener("click", (e) => {
+    const li = e.target.closest("li"); if (!li) return;
+    const l = carrinho.find((x) => x.key === li.dataset.key); if (!l) return;
+    if (e.target.closest("[data-rm]")) { carrinho = carrinho.filter((x) => x !== l); return renderPDV(); }
+    const cq = e.target.closest("[data-cq]");
+    if (cq) {
+      const novo = Math.max(0, (Number(l.qtd) || 0) + Number(cq.dataset.cq));
+      const it = l.itemId && estado.itens.find((i) => i.id === l.itemId);
+      if (it && novo > (Number(it.quantidade) || 0)) { toast(`Só há ${nf.format(Number(it.quantidade) || 0)} ${l.unidade} de ${l.nome}`); return; }
+      if (novo === 0) carrinho = carrinho.filter((x) => x !== l); else l.qtd = novo;
+      renderPDV();
+    }
+  });
+  $("#vCarrinho").addEventListener("input", (e) => {
+    const inp = e.target.closest("[data-campo]"); if (!inp) return;
+    const l = carrinho.find((x) => x.key === inp.closest("li").dataset.key); if (!l) return;
+    l[inp.dataset.campo] = num(inp.value);
+    atualizarTotais();
+  });
+  $("#vDesconto").addEventListener("input", atualizarTotais);
+
+  $("#btnAvulso").addEventListener("click", () => { $("#formAvulso").reset(); $("#dlgAvulso").showModal(); $("#aNome").focus(); });
+  $("#formAvulso").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nome = $("#aNome").value.trim(), preco = num($("#aPreco").value), qtd = num($("#aQtd").value);
+    if (!nome || preco === null || !qtd) return;
+    carrinho.push({ key: "a" + Date.now(), itemId: null, nome, unidade: "un", qtd, preco, custo: null });
+    $("#dlgAvulso").close(); renderPDV();
+  });
+
+  let finalizando = false;
+  $("#btnFinalizar").addEventListener("click", async () => {
+    if (finalizando || !carrinho.length) return;
+    const erro = (m) => { const el = $("#vErro"); el.textContent = m; el.hidden = false; };
+    // Confere preço e quantidade de cada linha
+    for (const l of carrinho) {
+      if (!(Number(l.qtd) > 0)) return erro(`Informe a quantidade de “${l.nome}”.`);
+      if (num(l.preco) === null) return erro(`Informe o preço de “${l.nome}”.`);
+      if (l.itemId) {
+        const it = estado.itens.find((i) => i.id === l.itemId);
+        if (!it) return erro(`“${l.nome}” não está mais no estoque. Remova da venda.`);
+        if (l.qtd > (Number(it.quantidade) || 0)) return erro(`Só há ${nf.format(Number(it.quantidade) || 0)} ${l.unidade} de “${l.nome}”.`);
+      }
+    }
+    const t = totaisCarrinho();
+    const pagamento = document.querySelector('input[name="pag"]:checked').value;
+    const linhas = carrinho.map((l) => ({
+      itemId: l.itemId, nome: l.nome, unidade: l.unidade, qtd: Number(l.qtd), preco: Number(l.preco),
+      custo: l.custo ?? null, subtotal: Math.round(Number(l.preco) * Number(l.qtd) * 100) / 100,
+    }));
+    const custoTotal = linhas.reduce((s, l) => s + (l.custo !== null ? l.custo * l.qtd : 0), 0);
+    finalizando = true; const btn = $("#btnFinalizar"); btn.disabled = true; btn.textContent = "Registrando…";
+    try {
+      const ref = db.collection("vendas").doc();
+      const codigo = codigoVenda(ref.id);
+      await ref.set({
+        em: new Date().toISOString(), itens: linhas, subtotal: t.subtotal, desconto: t.desconto, total: t.total,
+        custoTotal: Math.round(custoTotal * 100) / 100, pagamento, cliente: $("#vCliente").value.trim(),
+        por: meuId, cancelada: false,
+      });
+      // Desconta do estoque e registra no histórico
+      for (const l of linhas.filter((x) => x.itemId)) {
+        const it = estado.itens.find((i) => i.id === l.itemId); if (!it) continue;
+        const novo = Math.round(((Number(it.quantidade) || 0) - l.qtd) * 1000) / 1000;
+        await db.collection("itens").doc(it.id).update({ quantidade: novo, atualizadoEm: new Date().toISOString(), atualizadoPor: meuId });
+        await registrarMov(it, "saida", l.qtd, novo, `Venda ${codigo}`);
+      }
+      carrinho = []; $("#vDesconto").value = ""; $("#vCliente").value = ""; $("#vErro").hidden = true;
+      toast(`Venda ${codigo} registrada: ${brl.format(t.total)}`);
+      renderPDV();
+    } catch (err) { erro(erroEscrita(err)); }
+    finally { finalizando = false; btn.textContent = "Finalizar venda"; atualizarTotais(); }
+  });
+
+  function resumoItens(v) {
+    const its = Array.isArray(v.itens) ? v.itens : [];
+    return its.map((l) => `${nf.format(l.qtd)}× ${l.nome}`).join(", ");
+  }
+  function renderVendasHoje() {
+    const [a, b] = intervalo("dia");
+    const hoje = vendasEntre(a, b, true);
+    const valid = hoje.filter((v) => !v.cancelada);
+    $("#vHojeVazio").hidden = hoje.length > 0;
+    $("#vHojeTotal").textContent = valid.length ? `${valid.length} ${valid.length === 1 ? "venda" : "vendas"} · ${brl.format(valid.reduce((s, v) => s + (Number(v.total) || 0), 0))}` : "";
+    $("#vHoje").innerHTML = hoje.map((v) => `<li class="${v.cancelada ? "cancelada" : ""}">
+      <span class="hora">${esc(hhmm(v.em))}<br>${esc(codigoVenda(v.id))}</span>
+      <div class="itens"><span>${esc(resumoItens(v))}</span><small><span class="tag">${esc(PAG[v.pagamento] || v.pagamento || "")}</span>${v.cancelada ? '<span class="tag cancel">Cancelada</span>' : ""}${v.cliente ? esc(v.cliente) : ""}</small></div>
+      <span class="val num">${brl.format(Number(v.total) || 0)}</span>
+      <span class="acao">${!v.cancelada && estado.podeEscrever ? `<button type="button" class="btn btn-linha" data-cancelar="${esc(v.id)}">Cancelar</button>` : ""}</span>
+    </li>`).join("");
+  }
+
+  let vendaCancelar = null;
+  $("#vHoje").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-cancelar]"); if (!b) return;
+    vendaCancelar = estado.vendas.find((v) => v.id === b.dataset.cancelar); if (!vendaCancelar) return;
+    $("#canTxt").textContent = `A venda ${codigoVenda(vendaCancelar.id)} de ${brl.format(Number(vendaCancelar.total) || 0)} sai do faturamento e os produtos voltam para o estoque.`;
+    $("#canErro").hidden = true;
+    $("#dlgCancelar").showModal();
+  });
+  $("#formCancelar").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const v = vendaCancelar; if (!v || v.cancelada) return;
+    const btn = $("#btnCancelarVenda"); btn.disabled = true;
+    try {
+      await db.collection("vendas").doc(v.id).update({ cancelada: true, canceladaEm: new Date().toISOString(), canceladaPor: meuId });
+      for (const l of (v.itens || []).filter((x) => x.itemId)) {
+        const it = estado.itens.find((i) => i.id === l.itemId); if (!it) continue;
+        const novo = Math.round(((Number(it.quantidade) || 0) + Number(l.qtd)) * 1000) / 1000;
+        await db.collection("itens").doc(it.id).update({ quantidade: novo, atualizadoEm: new Date().toISOString(), atualizadoPor: meuId });
+        await registrarMov(it, "entrada", Number(l.qtd), novo, `Venda ${codigoVenda(v.id)} cancelada`);
+      }
+      $("#dlgCancelar").close();
+      toast(`Venda ${codigoVenda(v.id)} cancelada`);
+    } catch (err) { const el = $("#canErro"); el.textContent = erroEscrita(err); el.hidden = false; }
+    finally { btn.disabled = false; }
+  });
+
+  /* ================= Faturamento ================= */
+  $$(".periodos button").forEach((b) => b.addEventListener("click", () => {
+    estado.periodo = b.dataset.periodo;
+    $$(".periodos button").forEach((x) => x.setAttribute("aria-selected", x === b));
+    renderFaturamento();
+  }));
+
+  function somar(vs) {
+    const fat = vs.reduce((s, v) => s + (Number(v.total) || 0), 0);
+    const custo = vs.reduce((s, v) => s + (Number(v.custoTotal) || 0), 0);
+    const semCusto = vs.some((v) => (v.itens || []).some((l) => l.custo === null || l.custo === undefined));
+    return { fat, qtd: vs.length, ticket: vs.length ? fat / vs.length : 0, lucro: fat - custo, semCusto };
+  }
+  function delta(el, atual, anterior, rotulo) {
+    el.className = "delta";
+    if (!anterior && !atual) { el.textContent = `igual a ${rotulo}`; return; }
+    if (!anterior) { el.textContent = `${rotulo}: sem vendas`; return; }
+    const p = Math.round(((atual - anterior) / anterior) * 100);
+    el.classList.add(p > 0 ? "sobe" : p < 0 ? "desce" : "x");
+    el.textContent = `${p > 0 ? "▲ " : p < 0 ? "▼ " : ""}${Math.abs(p)}% em relação a ${rotulo}`;
+  }
+
+  function baldes(periodo, vs) {
+    const [a, b] = intervalo(periodo);
+    const agora = new Date();
+    let lista = [];
+    if (periodo === "dia") {
+      const horas = vs.map((v) => new Date(v.em).getHours());
+      const ini = Math.min(7, ...horas), fim = Math.max(20, ...horas, agora.getHours());
+      for (let h = ini; h <= fim; h++) lista.push({ rotulo: `${h}h`, longo: `${h}h às ${h + 1}h`, k: h, atual: h === agora.getHours() });
+      vs.forEach((v) => { const k = new Date(v.em).getHours(); const bk = lista.find((x) => x.k === k); if (bk) { bk.v = (bk.v || 0) + Number(v.total); bk.n = (bk.n || 0) + 1; } });
+    } else {
+      for (let d = new Date(a); d < b; d = somaDias(d, 1)) {
+        const dd = new Date(d);
+        lista.push({
+          rotulo: periodo === "semana" ? DIAS_SEM[dd.getDay()] : String(dd.getDate()),
+          longo: dd.toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit" }),
+          k: dd.toDateString(), atual: dd.toDateString() === agora.toDateString(), futuro: dd > agora,
+        });
+      }
+      vs.forEach((v) => { const k = new Date(v.em).toDateString(); const bk = lista.find((x) => x.k === k); if (bk) { bk.v = (bk.v || 0) + Number(v.total); bk.n = (bk.n || 0) + 1; } });
+    }
+    lista.forEach((x) => { x.v = Math.round((x.v || 0) * 100) / 100; x.n = x.n || 0; });
+    return lista;
+  }
+  function passoBonito(max) {
+    const bruto = max / 4, pot = Math.pow(10, Math.floor(Math.log10(bruto || 1)));
+    const f = bruto / pot; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * pot;
+  }
+  const brlCurto = (v) => v >= 1000 ? "R$ " + nf.format(Math.round(v / 100) / 10) + " mil" : "R$ " + nf.format(Math.round(v));
+
+  function desenharGrafico(lista) {
+    const wrap = $("#fGraf");
+    $$("svg, .graf-vazio", wrap).forEach((n) => n.remove());
+    const max = Math.max(0, ...lista.map((x) => x.v));
+    if (!max) { wrap.insertAdjacentHTML("beforeend", '<div class="graf-vazio">Sem vendas neste período ainda.</div>'); return; }
+    const W = Math.max(320, wrap.clientWidth - 32), H = 220, padE = 56, padB = 26, padT = 10;
+    const passo = passoBonito(max), topo = Math.ceil(max / passo) * passo;
+    const y = (v) => padT + (H - padT - padB) * (1 - v / topo);
+    const larg = (W - padE) / lista.length, gap = Math.max(2, Math.min(10, larg * 0.3)), bw = Math.max(3, larg - gap);
+    const cadaRotulo = lista.length > 20 ? 5 : lista.length > 12 ? 2 : 1;
+    let g = "";
+    for (let v = 0; v <= topo + 0.001; v += passo) g += `<line class="grade" x1="${padE}" x2="${W}" y1="${y(v)}" y2="${y(v)}"/><text class="eixo" x="${padE - 8}" y="${y(v) + 3}" text-anchor="end">${esc(brlCurto(v))}</text>`;
+    lista.forEach((x, i) => {
+      const x0 = padE + i * larg + gap / 2, top = y(x.v), base = y(0), h = Math.max(0, base - top);
+      const r = Math.min(4, bw / 2, h);
+      if (h > 0) g += `<path class="barra${x.atual ? " atual" : ""}" data-i="${i}" d="M${x0},${base} V${top + r} Q${x0},${top} ${x0 + r},${top} H${x0 + bw - r} Q${x0 + bw},${top} ${x0 + bw},${top + r} V${base} Z"/>`;
+      if (i % cadaRotulo === 0 || x.atual) g += `<text class="eixo" x="${x0 + bw / 2}" y="${H - 8}" text-anchor="middle">${esc(x.rotulo)}</text>`;
+      g += `<rect class="alvo" data-i="${i}" x="${padE + i * larg}" y="${padT}" width="${larg}" height="${H - padT - padB}"/>`;
+    });
+    wrap.insertAdjacentHTML("beforeend", `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Faturamento por ${estado.periodo === "dia" ? "hora" : "dia"}">${g}</svg>`);
+    const svg = $("svg", wrap), dica = $("#fDica");
+    const mostrar = (i) => {
+      const x = lista[i]; if (!x) return;
+      wrap.classList.add("foco");
+      $$(".barra", svg).forEach((b) => b.classList.toggle("ativa", Number(b.dataset.i) === i));
+      dica.innerHTML = `${esc(x.longo)}<b>${esc(brl.format(x.v))}</b>${x.n} ${x.n === 1 ? "venda" : "vendas"}`;
+      const esc_ = svg.getBoundingClientRect().width / W;
+      dica.style.left = Math.min(Math.max(16 + (padE + (i + .5) * larg) * esc_, 70), wrap.clientWidth - 70) + "px";
+      dica.style.top = (8 + Math.min(y(x.v), H - padB - 20) * esc_) + "px";
+      dica.classList.add("on");
+    };
+    const esconder = () => { wrap.classList.remove("foco"); dica.classList.remove("on"); };
+    svg.addEventListener("pointermove", (e) => { const a = e.target.closest("[data-i]"); if (a) mostrar(Number(a.dataset.i)); });
+    svg.addEventListener("pointerleave", esconder);
+  }
+
+  function renderFaturamento() {
+    if (estado.vista !== "faturamento") return;
+    const p = estado.periodo;
+    const [a, b] = intervalo(p), [pa, pb] = intervaloAnterior(p);
+    const vs = vendasEntre(a, b), ant = vendasEntre(pa, pb);
+    const r = somar(vs), ra = somar(ant);
+    const rotAnt = { dia: "ontem", semana: "a semana passada", mes: "o mês passado" }[p];
+    const titulo = { dia: "Faturamento de hoje", semana: "Faturamento da semana", mes: "Faturamento do mês" }[p];
+    $("#fTitulo").textContent = titulo;
+    const ok = estado.carregado;
+    $("#fFat").textContent = ok ? brl.format(r.fat) : "…";
+    $("#fatQtd").textContent = ok ? r.qtd : "…";
+    $("#fTicket").textContent = ok ? brl.format(r.ticket) : "…";
+    $("#fLucro").textContent = ok ? brl.format(r.lucro) : "…";
+    $("#fLucroSub").textContent = r.semCusto ? "há itens sem custo cadastrado" : "faturamento menos o custo dos itens";
+    if (ok) { delta($("#fFatDelta"), r.fat, ra.fat, rotAnt); delta($("#fatQtdDelta"), r.qtd, ra.qtd, rotAnt); }
+    $("#fGrafTit").textContent = p === "dia" ? "Faturamento por hora" : "Faturamento por dia";
+    $("#fTabCol").textContent = p === "dia" ? "Hora" : "Dia";
+    const lista = baldes(p, vs);
+    desenharGrafico(lista);
+    $("#fTab").innerHTML = lista.filter((x) => !x.futuro).map((x) => `<tr><td>${esc(x.longo)}</td><td class="dir num">${x.n}</td><td class="dir num">${brl.format(x.v)}</td></tr>`).join("");
+
+    // Por forma de pagamento
+    const porPag = Object.keys(PAG).map((k) => { const sel = vs.filter((v) => v.pagamento === k); return { k, v: sel.reduce((s, x) => s + (Number(x.total) || 0), 0), n: sel.length }; });
+    const maxPag = Math.max(0, ...porPag.map((x) => x.v));
+    $("#fPag").innerHTML = porPag.map((x) => `<li><span>${PAG[x.k]}</span><span class="trilho"><b style="transform:scaleX(${maxPag ? x.v / maxPag : 0})"></b></span><span class="v num">${brl.format(x.v)}<small>${r.fat ? Math.round((x.v / r.fat) * 100) : 0}% · ${x.n} ${x.n === 1 ? "venda" : "vendas"}</small></span></li>`).join("");
+
+    // Mais vendidos
+    const mapa = new Map();
+    vs.forEach((v) => (v.itens || []).forEach((l) => {
+      const k = l.itemId || "avulso:" + norm(l.nome);
+      const m = mapa.get(k) || { nome: l.nome, unidade: l.unidade || "un", qtd: 0, val: 0 };
+      m.qtd += Number(l.qtd) || 0; m.val += Number(l.subtotal) || 0; mapa.set(k, m);
+    }));
+    const top = [...mapa.values()].sort((x, y) => y.val - x.val).slice(0, 8);
+    $("#fTopVazio").hidden = top.length > 0;
+    $("#fTop").innerHTML = top.map((m) => `<tr><td>${esc(m.nome)}</td><td class="dir num">${esc(nf.format(m.qtd))} ${esc(m.unidade)}</td><td class="dir num">${brl.format(m.val)}</td></tr>`).join("");
+  }
+  let tResize; window.addEventListener("resize", () => { clearTimeout(tResize); tResize = setTimeout(renderFaturamento, 150); });
+
   /* ---------- Conexão com o banco ---------- */
   async function iniciar() {
     render();
+    mostrarVista();
     if (!window.claude || !window.claude.use) { sinc("erro", "Sem conexão com o banco"); return; }
     db = await window.claude.use("db");
     user = await window.claude.use("user");
     if (!db) {
       sinc("erro", "Banco indisponível");
       $("#vazio").innerHTML = "<b>Não foi possível abrir o estoque</b>Entre na sua conta do Claude e abra esta página de novo.";
-      $("#btnNovo").hidden = true;
+      $("#btnNovo").hidden = true; $("#btnAvulso").hidden = true;
       return;
     }
     if (user) {
@@ -766,17 +1376,25 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
       const pode = await user.can("data.write");
       if (pode === false) estado.podeEscrever = false;
     }
-    let pendentes = 3;
+    let pendentes = 4;
     const timer = setTimeout(() => { if (!estado.carregado) { sinc("erro", "Sem resposta do banco"); $("#vazio").innerHTML = "<b>O estoque está demorando para carregar</b>Confira a internet. A página continua tentando sozinha."; } }, 10000);
     const pronto = (snap) => {
       if (snap.metadata && snap.metadata.fromCache) return;
-      if (pendentes > 0 && --pendentes === 0) { estado.carregado = true; clearTimeout(timer); sinc("ok", "Sincronizado"); aplicarLeitura(); }
+      if (pendentes > 0 && --pendentes === 0) { estado.carregado = true; clearTimeout(timer); sinc("ok", "Sincronizado"); aplicarLeitura(); mostrarVista(); }
     };
     const falha = (e) => { clearTimeout(timer); sinc("erro", e && e.code === "revoked" ? "Acesso encerrado" : "Erro de conexão"); };
 
     db.collection("itens").onSnapshot((snap) => {
       estado.itens = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       pronto(snap); render();
+      if (estado.vista === "vendas") renderPDV();
+    }, falha);
+    // As 1000 vendas mais recentes bastam para mês atual e mês anterior de uma loja pequena
+    db.collection("vendas").orderBy("em", "desc").limit(1000).onSnapshot((snap) => {
+      estado.vendas = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      pronto(snap);
+      if (estado.vista === "vendas") renderVendasHoje();
+      if (estado.vista === "faturamento") renderFaturamento();
     }, falha);
     db.doc("config/categorias").onSnapshot((snap) => {
       const d = snap.exists ? snap.data() : {};
@@ -790,7 +1408,7 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
     }, falha);
   }
   document.addEventListener("visibilitychange", () => document.body.classList.toggle("pausado", document.hidden));
-  setInterval(renderHistorico, 60000); // atualiza "há x min"
+  setInterval(() => { renderHistorico(); if (estado.vista === "faturamento") renderFaturamento(); }, 60000); // atualiza "há x min" e o período atual
   iniciar();
 })();
 </script>
